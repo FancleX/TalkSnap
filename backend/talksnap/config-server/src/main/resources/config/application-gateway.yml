@@ -10,7 +10,3 @@ spring:
           uri: lb://USER-SERVICE
           predicates:
             - Path=/user/**
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:9002/eureka
