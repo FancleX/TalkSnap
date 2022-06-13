@@ -1,7 +1,6 @@
 package com.dev.userservice.controller;
 
 import com.dev.response.GeneralResponse;
-import com.dev.response.HTTPResult;
 import com.dev.user.User;
 import com.dev.userservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +22,10 @@ public class UserController {
     // check if the user is existed by email
     // if not existed store in database
     // otherwise give error message
-    @RequestMapping("/signup")
-    public GeneralResponse<String> signup() {
-        return null;
+    // not null variables: nickname, email, password
+    @GetMapping("/signup")
+    public GeneralResponse<String> signup(@RequestBody User user) {
+        return userService.signup(user);
     }
 
     // login
@@ -34,8 +34,11 @@ public class UserController {
     // if no, return email not found
     // if password is incorrect, return incorrect password
     // if all are correct, return token
-    @RequestMapping("/login")
-    public GeneralResponse<String> login() {return null;}
+    // post message: {email: xxx, password: xxx}
+    @PostMapping("/login")
+    public GeneralResponse<String> login(@PathVariable("email") String email, @PathVariable("password") String password) {
+        return userService.login(email, password);
+    }
 
 
     @RequestMapping("/logout")
@@ -46,7 +49,7 @@ public class UserController {
     public GeneralResponse<String> editNickname() {
         return null;
     }
-    
+
     @RequestMapping("edit/password")
     public GeneralResponse<String> editPassword() {return null;}
 

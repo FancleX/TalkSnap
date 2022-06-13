@@ -1,5 +1,6 @@
 package com.dev.user;
 
+import com.sun.istack.NotNull;
 import lombok.*;
 
 import javax.persistence.*;
@@ -19,12 +20,19 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
     private String nickname;
 
+    @NotNull
     private String email;
 
+    @NotNull
     private String password;
 
+    // md5 salt for password
+    private String salt;
+
+    @NotNull
     @Column(name = "created_time")
     private Date joinTime;
 
