@@ -6,6 +6,8 @@ import com.dev.userservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/user")
 @CrossOrigin
@@ -34,10 +36,10 @@ public class UserController {
     // if no, return email not found
     // if password is incorrect, return incorrect password
     // if all are correct, return token
-    // post message: {email: xxx, password: xxx}
+    // post message: {email: xxx, password: xxx} or {token: xxx}
     @PostMapping("/login")
-    public GeneralResponse<String> login(@PathVariable("email") String email, @PathVariable("password") String password) {
-        return userService.login(email, password);
+    public GeneralResponse<String> login(@RequestBody Map<String, String> info) {
+        return userService.login(info);
     }
 
 
