@@ -5,11 +5,13 @@ import com.dev.encryption.Encryption;
 import com.dev.response.GeneralResponse;
 import com.dev.response.HTTPResult;
 import com.dev.user.User;
+import com.dev.userservice.controller.PictureController;
 import com.dev.userservice.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.Map;
 
 @Service
@@ -41,13 +43,12 @@ public class LoginService {
         String salt = Encryption.saltGenerater();
         // encrypt password
         String newPassword = Encryption.md5(user.getPassword(), salt);
-        // check user profile picture, if doesn't exist give a default img url
-        if (user.getProfileImg() == null) {
-            user.setProfileImg("default".getBytes());
-        }
+        // give a default img url
+        user.setProfileImg("default".getBytes());
         // refill user info and store it
         user.setSalt(salt);
         user.setPassword(newPassword);
+        user.setJoinTime(new Date(System.currentTimeMillis()));
         userRepository.save(user);
         return HTTPResult.ok("Thanks for joining us!");
     }
@@ -94,11 +95,4 @@ public class LoginService {
             return HTTPResult.fail("The email or password is incorrect.");
         }
     }
-
-
-    public GeneralResponse<String> editPassword(Map<String, String> name) {
-        return null;
-    }
-
-
 }

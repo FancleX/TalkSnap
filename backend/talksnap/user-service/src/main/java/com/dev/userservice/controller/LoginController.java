@@ -52,25 +52,5 @@ public class LoginController {
     @RequestMapping("/logout")
     public GeneralResponse<String> logout() {return null;}
 
-    /**
-     * Update the nickname.
-     * {token: xxx, nickname: xxx}
-     *
-     * @return message
-     */
-    @PutMapping("/edit/name")
-    public GeneralResponse<String> editNickname(@RequestBody Map<String, String> newname) {
-        return null;
-    }
-
-    @PutMapping("edit/password")
-    public GeneralResponse<String> editPassword() {return null;}
-
-
-    @RequestMapping("edit/img")
-    public GeneralResponse<String> editProfileImg() {return null;}
-
-    @RequestMapping("/delete")
-    public GeneralResponse<String> deleteAccount() {return null;}
 
 }

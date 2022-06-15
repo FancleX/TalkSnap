@@ -23,8 +23,15 @@ public class PictureService {
         this.userRepository = userRepository;
     }
 
+    /**
+     * Upload picture to update the profile picture of the user.
+     *
+     * @param auth
+     * @param file
+     * @return the picture
+     */
     @Transactional
-    public GeneralResponse<String> uploadImg(String auth, MultipartFile file) {
+    public GeneralResponse<byte[]> uploadImg(String auth, MultipartFile file) {
         // verify auth
         Map<String, Object> payload = Auth.verify(auth);
         if (payload != null) {
@@ -36,7 +43,7 @@ public class PictureService {
             // save the img
             try {
                 user.setProfileImg(file.getBytes());
-                return HTTPResult.ok(user.toString());
+                return HTTPResult.ok(file.getBytes());
             } catch (IOException e) {
                 return HTTPResult.fail("Cannot upload the image, please try again.");
             }
