@@ -2,6 +2,7 @@ package com.dev.user;
 
 import com.sun.istack.NotNull;
 import lombok.*;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -36,7 +37,9 @@ public class User {
     @Column(name = "created_time")
     private Date joinTime;
 
-    @Column(name = "profileImgSrc")
-    private String profilePicture;
+    @Lob
+    @Type(type = "org.hibernate.type.BinaryType")
+    @Column(name = "profileImg")
+    private byte[] profileImg;
 }
 

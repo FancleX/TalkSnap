@@ -4,4 +4,3 @@ spring:
       uri: http://localhost:9000
       name: application
       profile: userService, eurekaAddress
-

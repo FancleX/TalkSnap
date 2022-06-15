@@ -49,12 +49,12 @@ public class Auth {
     }
 
     /**
-     * Verify if the token is valid.
+     * Verify if the token is valid, then return the payload
      *
      * @param token token to be verified
-     * @return true if the token is valid, otherwise false
+     * @return payload if the token is valid, otherwise null
      */
-    public static boolean verify(String token) {
+    public static Map<String, Object> verify(String token) {
         try {
             // get algorithm
             Algorithm algorithm = Algorithm.HMAC256(KEY);
@@ -62,10 +62,12 @@ public class Auth {
             JWTVerifier jwtVerifier = JWT.require(algorithm).build();
             // verify token
             DecodedJWT verify = jwtVerifier.verify(token);
-            return true;
+            HashMap<String, Object> payload = new HashMap<>();
+            payload.put("userId", verify.getClaim("userId").asLong());
+            payload.put("nickname", verify.getClaim("nickname").asString());
+            return payload;
         } catch (JWTVerificationException e) {
-            return false;
+            return null;
         }
     }
-
 }

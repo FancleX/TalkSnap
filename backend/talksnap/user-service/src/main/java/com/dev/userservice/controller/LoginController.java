@@ -2,7 +2,7 @@ package com.dev.userservice.controller;
 
 import com.dev.response.GeneralResponse;
 import com.dev.user.User;
-import com.dev.userservice.service.UserService;
+import com.dev.userservice.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,13 +11,14 @@ import java.util.Map;
 @RestController
 @RequestMapping("/user")
 @CrossOrigin
-public class UserController {
+public class LoginController {
 
-    private final UserService userService;
+
+    private final LoginService loginService;
 
     @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
+    public LoginController(LoginService loginService) {
+        this.loginService = loginService;
     }
 
     // signup
@@ -25,9 +26,9 @@ public class UserController {
     // if not existed store in database
     // otherwise give error message
     // not null variables: nickname, email, password
-    @GetMapping("/signup")
+    @PostMapping("/signup")
     public GeneralResponse<String> signup(@RequestBody User user) {
-        return userService.signup(user);
+        return loginService.signup(user);
     }
 
     // login
@@ -36,23 +37,33 @@ public class UserController {
     // if no, return email not found
     // if password is incorrect, return incorrect password
     // if all are correct, return token
+    // if login with token, verify the token
     // post message: {email: xxx, password: xxx} or {token: xxx}
     @PostMapping("/login")
     public GeneralResponse<String> login(@RequestBody Map<String, String> info) {
-        return userService.login(info);
+        return loginService.login(info);
     }
 
-
+    /**
+     * Log out will clear the issued token.
+     *
+     * @return
+     */
     @RequestMapping("/logout")
     public GeneralResponse<String> logout() {return null;}
 
-
-    @RequestMapping("/edit/name")
-    public GeneralResponse<String> editNickname() {
+    /**
+     * Update the nickname.
+     * {token: xxx, nickname: xxx}
+     *
+     * @return message
+     */
+    @PutMapping("/edit/name")
+    public GeneralResponse<String> editNickname(@RequestBody Map<String, String> newname) {
         return null;
     }
 
-    @RequestMapping("edit/password")
+    @PutMapping("edit/password")
     public GeneralResponse<String> editPassword() {return null;}
 
 

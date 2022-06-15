@@ -11,15 +11,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
-import java.util.Optional;
 
 @Service
-public class UserService {
+public class LoginService {
 
     private final UserRepository userRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public LoginService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -34,7 +33,7 @@ public class UserService {
         // check email
         Long email = userRepository.getUserIdByEmail(user.getEmail());
         // if it is existed, return this email has registered
-        if (email == null) {
+        if (email != null) {
             return HTTPResult.fail("This email has registered!");
         }
         // else encrypt user info
@@ -43,8 +42,8 @@ public class UserService {
         // encrypt password
         String newPassword = Encryption.md5(user.getPassword(), salt);
         // check user profile picture, if doesn't exist give a default img url
-        if (user.getProfilePicture() == null) {
-            user.setProfilePicture("default");
+        if (user.getProfileImg() == null) {
+            user.setProfileImg("default".getBytes());
         }
         // refill user info and store it
         user.setSalt(salt);
@@ -65,7 +64,7 @@ public class UserService {
             // get token
             String token = info.get("token");
             // verify token, if valid return pass else return error message
-            if (Auth.verify(token)) {
+            if (Auth.verify(token) != null) {
                 return HTTPResult.ok("pass");
             }
             return HTTPResult.fail("Please login.");
@@ -94,12 +93,12 @@ public class UserService {
             // else return error message
             return HTTPResult.fail("The email or password is incorrect.");
         }
-
-
-
     }
 
 
+    public GeneralResponse<String> editPassword(Map<String, String> name) {
+        return null;
+    }
 
 
 }
