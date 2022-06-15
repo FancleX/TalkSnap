@@ -8,6 +8,7 @@ import com.dev.userservice.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -86,6 +87,12 @@ public class ProfileService {
             return HTTPResult.ok("Your account has been deleted.");
         }
         return HTTPResult.fail("Please login.");
+    }
+
+    public GeneralResponse<List<Map<String, Object>>> searchUser(String username) {
+        // query the name
+        List<Map<String, Object>> userList = userRepository.searchUser(username);
+        return HTTPResult.ok(userList);
     }
 
 }

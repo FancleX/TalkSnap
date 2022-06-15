@@ -5,6 +5,7 @@ import com.dev.userservice.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -80,6 +81,19 @@ public class ProfileController {
         return profileService.deleteAccount(auth);
     }
 
+    /**
+     * Use for a user search another user,
+     * return the queried user's profile.
+     * look up username
+     * profile will be  {id:xxx, name:xxx, profileImg:xxx}
+     *
+     * @param username
+     * @return user's profile
+     */
+    @GetMapping("/search/{username}")
+    public GeneralResponse<List<Map<String, Object>>> searchUser(@PathVariable String username) {
+        return profileService.searchUser(username);
+    }
 
 
 

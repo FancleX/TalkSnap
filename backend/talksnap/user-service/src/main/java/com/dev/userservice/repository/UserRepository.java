@@ -7,6 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Map;
 
 @Repository
@@ -24,7 +25,7 @@ public interface UserRepository extends CrudRepository<User, Long> {
 
     @Modifying
     @Query(value = "UPDATE user_info SET nickname = :name WHERE id = :userId", nativeQuery = true)
-    void updateNickname(@Param("nickname") String name, @Param("userId") Long id);
+    void updateNickname(@Param("name") String name, @Param("userId") Long id);
 
     @Modifying
     @Query(value = "UPDATE user_info SET email = :email WHERE id = :userId", nativeQuery = true)
@@ -33,4 +34,7 @@ public interface UserRepository extends CrudRepository<User, Long> {
     @Modifying
     @Query(value = "UPDATE user_info SET password = :password WHERE id = :userId", nativeQuery = true)
     void updatePassword(@Param("password") String password, @Param("userId") Long id);
+
+    @Query(value = "SELECT id, nickname, profile_img FROM user_info WHERE nickname LIKE CONCAT('%',:username,'%')", nativeQuery = true)
+    List<Map<String, Object>> searchUser(@Param("username") String username);
 }
