@@ -43,12 +43,10 @@ public class LoginService {
         String salt = Encryption.saltGenerater();
         // encrypt password
         String newPassword = Encryption.md5(user.getPassword(), salt);
-        // give a default img url
-        user.setProfileImg("default".getBytes());
         // refill user info and store it
+        user.setProfileImg(null);
         user.setSalt(salt);
         user.setPassword(newPassword);
-        user.setJoinTime(new Date(System.currentTimeMillis()));
         userRepository.save(user);
         return HTTPResult.ok("Thanks for joining us!");
     }

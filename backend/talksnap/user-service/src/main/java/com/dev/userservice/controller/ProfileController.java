@@ -59,13 +59,14 @@ public class ProfileController {
 
     /**
      * Update the password.
+     * {oldPassword:xxx, newPassword}
      *
      * @param auth
      * @param password
      * @return message
      */
     @PutMapping("edit/password")
-    public GeneralResponse<String> editPassword(@RequestHeader("Authorization") String auth, @RequestBody String password) {
+    public GeneralResponse<String> editPassword(@RequestHeader("Authorization") String auth, @RequestBody Map<String, String> password) {
         return profileService.editPassword(auth, password);
     }
 

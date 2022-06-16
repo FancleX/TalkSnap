@@ -60,19 +60,28 @@ public class ProfileService {
         return HTTPResult.fail("Please login.");
     }
 
-    public GeneralResponse<String> editPassword(String auth, String password) {
+    public GeneralResponse<String> editPassword(String auth, Map<String, String> password) {
         // verify the token
         Map<String, Object> payload = Auth.verify(auth);
         if (payload != null) {
             // get user id
             Long id = (Long) payload.get("userId");
-            // query salt of the user
-            String salt = userRepository.getUserSaltById(id);
-            // encrypt new password
-            String md5Password = Encryption.md5(password, salt);
-            // update the password
-            userRepository.updatePassword(md5Password, id);
-            return HTTPResult.ok("Done.");
+            // get the old password of the user
+            String oldPassword = userRepository.getPasswordById(id);
+            // check if the old password is correct
+            String oldPasswordFromInput = password.get("oldPassword");
+            if (oldPassword.equals(oldPasswordFromInput)) {
+                // query salt of the user
+                String salt = userRepository.getUserSaltById(id);
+                // encrypt new password
+                String newPassword = password.get("newPassword");
+                String md5Password = Encryption.md5(newPassword, salt);
+                // update the password
+                userRepository.updatePassword(md5Password, id);
+                return HTTPResult.ok("Done.");
+            }
+            // if the old password is incorrect
+            return HTTPResult.fail("The password is incorrect.");
         }
         return HTTPResult.fail("Please login.");
     }

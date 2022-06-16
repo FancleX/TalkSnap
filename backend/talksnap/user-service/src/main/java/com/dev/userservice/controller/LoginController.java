@@ -25,7 +25,7 @@ public class LoginController {
     // check if the user is existed by email
     // if not existed store in database
     // otherwise give error message
-    // not null variables: nickname, email, password
+    // not null variables: nickname, email, password, join time
     @PostMapping("/signup")
     public GeneralResponse<String> signup(@RequestBody User user) {
         return loginService.signup(user);

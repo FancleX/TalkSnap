@@ -19,7 +19,6 @@ public interface UserRepository extends CrudRepository<User, Long> {
     @Query(value = "SELECT nickname, email, profile_img FROM user_info WHERE id = :userId", nativeQuery = true)
     Map<String, Object> getUserProfileById(@Param("userId") Long id);
 
-
     @Query(value = "SELECT salt FROM user_info WHERE id = :userId", nativeQuery = true)
     String getUserSaltById(@Param("userId") Long id);
 
@@ -37,4 +36,7 @@ public interface UserRepository extends CrudRepository<User, Long> {
 
     @Query(value = "SELECT id, nickname, profile_img FROM user_info WHERE nickname LIKE CONCAT('%',:username,'%')", nativeQuery = true)
     List<Map<String, Object>> searchUser(@Param("username") String username);
+
+    @Query(value = "SELECT password FROM user_info WHERE id = :userId", nativeQuery = true)
+    String getPasswordById(@Param("userId") Long id);
 }
