@@ -1,5 +1,5 @@
 import axios from "axios";
-import { MsgIndicator } from "../utils/MsgIndicator";
+import { MsgIndicator } from "../utils/msgIndicator";
 
 // global url 
 let protocol = window.location.protocol;
@@ -59,7 +59,7 @@ const errorHandle = (status, other) => {
         // Forbidden
         case 403:
             MsgIndicator.error("You don't have permission to access this site.");
-            // clear token
+            // clear invalid token
             this.$store.dispatch("deleteToken");
             // redirect to home page
             this.$router.push("/");

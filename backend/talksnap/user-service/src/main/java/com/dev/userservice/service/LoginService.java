@@ -66,7 +66,7 @@ public class LoginService {
             if (Auth.verify(token) != null) {
                 return HTTPResult.ok("pass");
             }
-            return HTTPResult.fail("Please login.");
+            return HTTPResult.fail("Please login again.");
         } catch (NullPointerException e) {
             // if the user doesn't own a token now
             // query email

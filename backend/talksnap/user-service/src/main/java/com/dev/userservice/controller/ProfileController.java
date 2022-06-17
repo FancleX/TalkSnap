@@ -27,7 +27,7 @@ public class ProfileController {
      * @param auth
      * @return use info {nickname: xxx, email: xxx, profileImg: xxx}
      */
-    @GetMapping("fetchUser")
+    @GetMapping("/fetchUser")
     public GeneralResponse<Map<String, Object>> fetchUser(@RequestHeader("Authorization") String auth) {
         return profileService.fetchUser(auth);
     }
