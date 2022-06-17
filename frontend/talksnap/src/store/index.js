@@ -27,7 +27,7 @@ export default createStore({
       localStorage.profile = profile;
     },
     deleteProfile(state) {
-      state.userProfile = "";
+      state.userProfile = {};
       localStorage.removeItem("profile");
     }
   },
