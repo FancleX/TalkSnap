@@ -1,5 +1,5 @@
 import axios from "axios";
-import { MsgIndicator } from "../utils/msgIndicator";
+import MsgIndicator from "../utils/msgIndicator";
 
 // global url 
 let protocol = window.location.protocol;

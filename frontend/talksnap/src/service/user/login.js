@@ -1,6 +1,6 @@
 import axios from "axios"
-import { MsgIndicator } from "@/utils/msgIndicator";
-import { Notification } from "@/utils/notification";
+import MsgIndicator from "@/utils/msgIndicator";
+import Notification from "@/utils/notification";
 
 const LoginProcess = {
 
