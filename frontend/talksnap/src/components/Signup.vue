@@ -1,25 +1,33 @@
 <template>
-  <div class="loginForm">
+  <div class="signupForm">
     <el-form
-      :model="loginForm"
+      :model="signupForm"
       status-icon
       :rules="rules"
-      ref="loginForm"
+      ref="signupForm"
       label-width="100px"
       style="width: 100%; heigth: 100%; magin: auto"
     >
-      <el-header style="font-size: 2rem; padding: 40px 20px 10px 20px; text-align: center; margin-top:1rem"
-        >Login</el-header
+      <el-header
+        style="
+          font-size: 2rem;
+          padding: 40px 20px 10px 20px;
+          text-align: center;
+          margin-top: 1rem;
+        "
+        >Signup</el-header
       >
-      <el-form-item label="email" prop="email" class="item" style="margin-top: 5rem">
-        <el-input type="email" v-model="loginForm.email" autocomplete></el-input>
+      <el-form-item label="nickname" prop="nickname" class="item" style="margin-top: 5rem">
+        <el-input type="text" v-model="signupForm.nickname" autocomplete></el-input>
+      </el-form-item>
+      <el-form-item label="email" prop="email" class="item">
+        <el-input type="email" v-model="signupForm.email" autocomplete></el-input>
       </el-form-item>
       <el-form-item label="password" prop="password" class="item">
-        <el-input type="password" v-model="loginForm.password" autocomplete></el-input>
+        <el-input type="password" v-model="signupForm.password" autocomplete></el-input>
       </el-form-item>
       <el-form-item class="item">
-        <el-button type="primary" @click="submitForm('loginForm')">Login</el-button>
-        <el-button @click="toggleSignup()">No account? Signup here</el-button>
+        <el-button type="primary" style="margin-left: 90px;" @click="submitForm('signupForm')">Signup</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -30,14 +38,24 @@ import MsgIndicator from "@/utils/msgIndicator";
 import LoginProcess from "@/service/user/login";
 
 export default {
-  name: "Login",
+  name: "Signup",
   data() {
     return {
-      loginForm: {
+      signupForm: {
+        nickname: "",
         email: "",
         password: "",
       },
       rules: {
+        nickname: [
+            { required: true, message: "Nickname cannot be empty", trigger: "blur" },
+            {
+            min: 3,
+            max: 10,
+            message: "Nickname should be 6 to 20 charaters",
+            trigger: "blur",
+          },
+        ],
         email: [
           { required: true, message: "Email cannot be empty", trigger: "blur" },
           {
@@ -62,21 +80,18 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          LoginProcess.loginWithAccount(this.loginForm);
+          LoginProcess.signup(this.signupForm);
         } else {
           MsgIndicator.error("Something wrong with your information, please try again");
         }
       });
-    },
-    toggleSignup() {
-      this.$router.push("/signup");
     },
   },
 };
 </script>
 
 <style scoped>
-.loginForm {
+.signupForm {
   margin: 150px 0 0 70px;
   width: 30rem;
   height: 25rem;
@@ -86,6 +101,6 @@ export default {
 }
 
 .item {
-    padding: 10px 15px 0px 10px;
+  padding: 10px 15px 0px 10px;
 }
 </style>

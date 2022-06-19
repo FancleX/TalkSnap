@@ -4,19 +4,20 @@ import Notification from "@/utils/notification";
 
 const LoginProcess = {
 
-    async signup(nickname, email, password) {
+    async signup(signupForm) {
         // get current time
         let date = new Date();
         await axios.post("/user/signup", {
-            nickname: nickname,
-            email: email,
-            password: password,
+            nickname: signupForm.nickname,
+            email: signupForm.email,
+            password: signupForm.password,
             joinTime: date.toLocaleString,
         })
         .then(res => {
             // determine http code
             if (res.data.code == 200) {
                 MsgIndicator.success(res.data.data);
+                this.$router.push('/login');
             } else {
                 MsgIndicator.error(res.data.message);
             }
@@ -26,10 +27,10 @@ const LoginProcess = {
         })
     },
 
-    async loginWithAccount(email, password) {
+    async loginWithAccount(loginForm) {
         await axios.post("/user/login", {
-            email: email,
-            password: password
+            email: loginForm.email,
+            password: loginForm.password
         })
         .then(res => {
             // check http code
@@ -54,7 +55,7 @@ const LoginProcess = {
 
     async loginWithToken() {
         // get token
-        let auth = this.$store.getters["getAuth"];
+        let auth = this.$store.getters.getAuth;
         await axios.post("/user/login", {
             token: auth
         })
