@@ -24,6 +24,7 @@ const ProfileFetcher = {
             Notification.alert(err);
         })
     }
+    
 
 }
 

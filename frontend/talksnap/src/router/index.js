@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import store from '@/store/index.js'
 import HomeView from '../views/HomeView.vue'
 import LoginProcess from '@/service/user/login'
 
@@ -19,7 +20,7 @@ const routes = [
     component: () => import('@/components/Signup.vue')
   },
   {
-    path: '/about',
+    path: '/home',
     name: 'about',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
@@ -33,5 +34,18 @@ const router = createRouter({
   routes
 })
 
+// router guard
+router.beforeEach(async (to, from, next) => {
+  if ((to.path !== "/login" && to.path !== "/signup" && to.path !== "/") && !store.state.token) {
+    next({ name: 'login' });
+  }
+  // auto login
+  else if (to.path === "/login" && store.state.token) {
+    next(LoginProcess.loginWithToken());
+  }
+  else {
+    next();
+  }
+})
 
 export default router
