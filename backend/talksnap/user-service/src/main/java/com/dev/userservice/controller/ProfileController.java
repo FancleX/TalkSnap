@@ -10,7 +10,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/user/profile")
-@CrossOrigin
 public class ProfileController {
 
 

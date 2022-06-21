@@ -1,12 +1,13 @@
 import axios from "axios";
 import Notification from "@/utils/notification";
+import store from "@/store";
 
 const ProfileFetcher = {
 
     // fetch with token
     async fetchUserProfile() {
         // check if profile exits in storage
-        let profile = this.$store.getters["getUserProfile"];
+        let profile = store.getters.getUserProfile;
         if (profile != null) {
             return profile;
         }
@@ -16,9 +17,19 @@ const ProfileFetcher = {
                 // create a user profile
                 profile = res.data.data;
                 // store the profile
-                this.$store.commit("setUserProfile", userProfile);
+                store.commit("setUserProfile", userProfile);
                 return userProfile;
             }
+        })
+        .catch(err => {
+            Notification.alert(err);
+        })
+    },
+
+    async searchUser(input) {
+        await axios.get("/user/profile/search/" + input)
+        .then(res => {
+            return res.data.data;
         })
         .catch(err => {
             Notification.alert(err);

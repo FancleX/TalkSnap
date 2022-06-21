@@ -16,8 +16,8 @@
       <span id="ap">ap</span>
     </div>
     <div class="flex-grow" />
-    <el-menu-item v-if="true" index="2">
-    <SearchBar />  
+    <el-menu-item v-if="isLogin" index="2">
+    <Search />  
     </el-menu-item>
     <el-menu-item v-else index="1" style="margin-right: 25px">
       <div style="font-size: 1rem">Login/Signup</div>
@@ -28,13 +28,15 @@
 
 <script>
 import { computed, ref } from "vue";
-import SearchBar from "@/components/SearchBar.vue"
+// import SearchBar from "@/components/SearchBar.vue"
 import ProfileFetcher from "@/service/user/profile";
+import Search from "@/components/Search.vue"
 
 export default {
   name: "Navbar",
   components: {
-    SearchBar
+    // SearchBar
+    Search
   },
   data() {
     return {
@@ -54,10 +56,8 @@ export default {
         case "0":
           this.$router.push("/");
         case "1":
-          this.$router.push("/login");
-        case "2":
-          
-      }
+          this.$router.push("/login");    
+      };
     },
   },
 };

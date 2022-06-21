@@ -1,5 +1,6 @@
 import axios from "axios";
 import MsgIndicator from "../utils/msgIndicator";
+import router from '@/router'
 
 // global url 
 let protocol = window.location.protocol;
@@ -15,7 +16,7 @@ if (reg.test(host)) {
 // request interceptor
 axios.interceptors.request.use(function (config) {
     // exclude the login and home and signup page
-    let path = this.$router.name;
+    let path = router.path;
     if (path != "/" || path != "/login" || path != "/signup") {
         // get token from web storage
         if (localStorage.token) {
@@ -25,7 +26,7 @@ axios.interceptors.request.use(function (config) {
     return config;
 }, function (error) {
     // redirect to home page
-    this.$router.push("/");
+    router.push("/");
     return Promise.reject(error);
 });
 
@@ -54,19 +55,19 @@ const errorHandle = (status, other) => {
         case 401:
             MsgIndicator.error("Unauthorized");
             // redirect to login page
-            this.$router.push("/login");
+            router.push("/login");
             break;
         // Forbidden
         case 403:
             MsgIndicator.error("You don't have permission to access this site.");
             // clear invalid token
-            this.$store.dispatch("deleteToken");
+            store.dispatch("deleteToken");
             // redirect to home page
-            this.$router.push("/");
+            router.push("/");
             break;
         // redirect to 404 page  
         case 404:
-            this.$router.push("/notFoundPage");
+            router.push("/notFoundPage");
             break;
         default:
             MsgIndicator.warning(other);
