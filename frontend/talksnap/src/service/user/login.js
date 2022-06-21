@@ -13,7 +13,7 @@ const LoginProcess = {
             nickname: signupForm.nickname,
             email: signupForm.email,
             password: signupForm.password,
-            joinTime: date.toLocaleString,
+            joinTime: date.getTime(),
         })
         .then(res => {
             // determine http code
@@ -57,7 +57,7 @@ const LoginProcess = {
 
     async loginWithToken() {
         // get token
-        let auth = store.state.getAuth;
+        let auth = localStorage.token;
         await axios.post("/user/login", {
             token: auth
         })
@@ -66,13 +66,13 @@ const LoginProcess = {
             if (res.data.code == 200) {
                 // print successful msg
                 MsgIndicator.success("Welcome back!");
-                // redirect to home
-                router.push("/home");
+                // commit to vuex store cache
+                store.commit("setToken", localStorage.token);
+                return 1;
             } else {
                 // print error msg
                 MsgIndicator.error(res.data.message);
-                // redirect to login
-                router.push("/login");
+                return 0;
             }
         })
         .catch(err => {

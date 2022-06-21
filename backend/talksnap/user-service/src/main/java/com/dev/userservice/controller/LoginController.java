@@ -26,8 +26,8 @@ public class LoginController {
     // otherwise give error message
     // not null variables: nickname, email, password, join time
     @PostMapping("/signup")
-    public GeneralResponse<String> signup(@RequestBody User user) {
-        return loginService.signup(user);
+    public GeneralResponse<String> signup(@RequestBody Map<String, Object> data) {
+        return loginService.signup(data);
     }
 
     // login

@@ -78,7 +78,7 @@ export default {
           },
         ],
         duplicatedPassword: [
-          { required: true, validator: this.validatePassword, trigger: "change" },
+          { required: true, validator: this.validatePassword, trigger: "blur" },
         ],
       },
     };
@@ -86,7 +86,9 @@ export default {
   methods: {
     validatePassword(rule, value, callback) {
       if (value !== this.signupForm.password) {
-        callback(new Error("Password is not consistent"))
+        callback(new Error("Password is not consistent"));
+      } else {
+        callback();
       }
     },
     submitForm(formName) {

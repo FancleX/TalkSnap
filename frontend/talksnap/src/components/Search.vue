@@ -56,13 +56,14 @@ export default {
       if (queryString) {
         const result = ProfileFetcher.searchUser(queryString);
         list = result;
+        console.log(result)
         for (let i = 0; i < list.length; i++) {
           list[i].value = list[i].nickname;
         }
         let timeout = ''
         clearTimeout(timeout)
         timeout = setTimeout(() => {
-          cb(list)
+          list = [];
         }, 100 * Math.random())
       };
     },

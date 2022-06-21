@@ -27,24 +27,29 @@ public class LoginService {
     /**
      * signup
      *
-     * @param user
+     * @param data
      * @return
      */
     @Transactional
-    public GeneralResponse<String> signup(User user) {
+    public GeneralResponse<String> signup(Map<String, Object> data) {
         // check email
-        Long email = userRepository.getUserIdByEmail(user.getEmail());
+        String email = (String) data.get("email");
+        Long id = userRepository.getUserIdByEmail(email);
         // if it is existed, return this email has registered
-        if (email != null) {
+        if (id != null) {
             return HTTPResult.fail("This email has registered!");
         }
         // else encrypt user info
         // get the salt of the user
         String salt = Encryption.saltGenerater();
         // encrypt password
-        String newPassword = Encryption.md5(user.getPassword(), salt);
-        // refill user info and store it
+        String newPassword = Encryption.md5((String) data.get("password"), salt);
+        // populate the user info and store it
+        User user = new User();
+        user.setNickname((String) data.get("nickname"));
+        user.setEmail(email);
         user.setProfileImg(null);
+        user.setJoinTime(new Date((long) data.get("joinTime")));
         user.setSalt(salt);
         user.setPassword(newPassword);
         userRepository.save(user);

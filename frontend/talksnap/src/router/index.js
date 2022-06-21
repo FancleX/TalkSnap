@@ -34,14 +34,21 @@ const router = createRouter({
   routes
 })
 
+let isLogin = false;
 // router guard
 router.beforeEach(async (to, from, next) => {
-  if ((to.path !== "/login" && to.path !== "/signup" && to.path !== "/") && !store.state.token) {
+  if ((to.path !== "/login" && to.path !== "/signup" && to.path !== "/") && !localStorage.token) {
     next({ name: 'login' });
   }
   // auto login
-  else if (to.path === "/login" && store.state.token) {
-    next(LoginProcess.loginWithToken());
+  if (to.path === "/login" && localStorage.token && !isLogin) {
+    console.log(store.state.token)
+    if (LoginProcess.loginWithToken()) {
+      isLogin = true;
+      next('/home');
+    } else {
+      next();
+    }
   }
   else {
     next();

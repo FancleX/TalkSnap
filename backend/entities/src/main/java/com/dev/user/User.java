@@ -5,6 +5,7 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 
 @NoArgsConstructor
@@ -30,7 +31,7 @@ public class User implements Serializable {
     private String salt;
 
     @Column(name = "created_time")
-    private String joinTime;
+    private Date joinTime;
 
     @Lob
     @Type(type = "org.hibernate.type.BinaryType")
