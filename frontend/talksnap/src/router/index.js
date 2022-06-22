@@ -42,7 +42,6 @@ router.beforeEach(async (to, from, next) => {
   }
   // auto login
   if (to.path === "/login" && localStorage.token && !isLogin) {
-    console.log(store.state.token)
     if (LoginProcess.loginWithToken()) {
       isLogin = true;
       next('/home');

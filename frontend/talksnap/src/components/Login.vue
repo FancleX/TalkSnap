@@ -85,7 +85,7 @@ export default {
   box-shadow: 5px 5px 5px 0.1rem rgb(39 37 37 / 50%);
 }
 
-.loginForm /deep/ .el-form-item__label {
+.loginForm :deep() .el-form-item__label {
   justify-content: flex-start;
   margin-left: 10px;
 }

@@ -27,13 +27,15 @@ const ProfileFetcher = {
     },
 
     async searchUser(input) {
+        let data = [];
         await axios.get("/user/profile/search/" + input)
         .then(res => {
-            return res.data.data;
+            data = res.data.data
         })
         .catch(err => {
             Notification.alert(err);
         })
+        return data;
     }
     
 

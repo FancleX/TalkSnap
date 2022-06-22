@@ -22,6 +22,20 @@ export default {
     Navbar,
     Footer,
   },
+  created() {
+    if (localStorage.getItem("token")) {
+      this.$store.replaceState(
+        Object.assign(
+          {},
+          this.$store.state.token,
+          localStorage.getItem("token")
+        )
+      );
+    }
+    window.addEventListener("beforeunload", () => {
+      localStorage.setItem("token", this.$store.state.token);
+    });
+  }
 };
 </script>
 

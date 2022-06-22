@@ -11,7 +11,8 @@
         class="tooltip-wrap"
         @mouseenter="handleTooltipIn($event)"
         @mouseleave="handleTooltipOut($event)"
-    >{{ text }}</div>
+    >
+    {{ text }}</div>
   </el-tooltip>
 </template>
 <script>
@@ -20,11 +21,13 @@ export default {
   props: {
     // 字符内容
     text: {
+      type: String,
       default: ''
     },
     // tooltip显示位置
     placement: {
-      default: 'top-start'
+      type: String,
+      default: 'top'
     }
   },
   data() {

@@ -1,58 +1,72 @@
 <template>
-  <div>
-    <el-icon><Search /></el-icon>
-    <el-input
-      placeholder="Please Input"
-      v-model="searchContent"
-      style="margin: 12px 0 12px 0; width: 200px"
-    />
-    <el-card class="box-card" v-if="isSearch">
-      <template #header>
-        <div class="card-header">
-          <span>Card name</span>
-          <el-button class="button" text>Operation button</el-button>
-        </div>
-      </template>
-      <div v-for="o in 4" :key="o" class="text item">{{ "List item " + o }}</div>
-    </el-card>
+  <div class="searchbar">
+    <el-form :model="basicInfo" size="default" label-width="100px">
+      <el-form-item prop="startDate" style="width: 100%; margin: auto">
+        <el-autocomplete
+          prefix-icon="Search"
+          v-model.trim="basicInfo.selectValue"
+          placeholder="Search user ..."
+          :fetch-suggestions="querySearchAsync"
+          :trigger-on-focus="false"
+          @select="handleSelect"
+        >
+          <template v-slot:item="{ item }">
+            <EllipsisTooltip :text="item.value" />
+          </template>
+        </el-autocomplete>
+      </el-form-item>
+    </el-form>
   </div>
 </template>
 
 <script>
+import EllipsisTooltip from "@/components/EllipsisTooltip.vue";
+import ProfileFetcher from "@/service/user/profile";
 import { Search } from "@element-plus/icons-vue";
-import { computed } from "@vue/runtime-core";
 
 export default {
-  name: "Searchbar",
+  name: "SearchBar",
   components: {
+    EllipsisTooltip,
     Search,
   },
   data() {
     return {
-      searchContent: "",
-      isSearch: computed(() => this?.searchContent),
+      basicInfo: {
+        selectValue: "",
+      },
     };
   },
-  methods: {},
+  methods: {
+    async querySearchAsync(queryString, callback) {
+      let list = [];
+      // let wtParams = {
+      //   pageNo: 0,
+      //   countPerPage: 5,
+      //   displayName: queryString,
+      // };
+      if (queryString) {
+        // get object list
+        const result = await ProfileFetcher.searchUser(queryString);
+        list = result;
+        for (let i = 0; i < list.length; i++) {
+          // exclude self
+          // if (list[i].id === this.$store.getters.getUserProfile.id)
+          list[i].value = list[i].nickname;
+        }
+        setTimeout(() => {
+          callback(list);
+        }, 300);
+      }
+    },
+    handleSelect(item) {
+      console.log("点击当前项的value值" + item.value);
+    },
+  },
 };
 </script>
-
 <style scoped>
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.text {
-  font-size: 14px;
-}
-
-.item {
-  margin-bottom: 18px;
-}
-
-.box-card {
-  width: 200px;
+.searchbar :deep() .el-form-item__content {
+  margin-left: 0 !important;
 }
 </style>
