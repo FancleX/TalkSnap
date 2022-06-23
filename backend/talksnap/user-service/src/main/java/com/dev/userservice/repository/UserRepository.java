@@ -34,8 +34,8 @@ public interface UserRepository extends CrudRepository<User, Long> {
     @Query(value = "UPDATE user_info SET password = :password WHERE id = :userId", nativeQuery = true)
     void updatePassword(@Param("password") String password, @Param("userId") Long id);
 
-    @Query(value = "SELECT id, nickname, profile_img FROM user_info WHERE nickname LIKE CONCAT('%',:username,'%')", nativeQuery = true)
-    List<Map<String, Object>> searchUser(@Param("username") String username);
+    @Query(value = "SELECT id, nickname, profile_img FROM user_info WHERE nickname LIKE CONCAT('%',:username,'%') AND id != :userId", nativeQuery = true)
+    List<Map<String, Object>> searchUser(@Param("userId") Long id, @Param("username") String username);
 
     @Query(value = "SELECT password FROM user_info WHERE id = :userId", nativeQuery = true)
     String getPasswordById(@Param("userId") Long id);

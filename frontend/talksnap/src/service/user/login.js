@@ -3,6 +3,7 @@ import MsgIndicator from "@/utils/msgIndicator";
 import Notification from "@/utils/notification";
 import store from "@/store";
 import router from "@/router";
+import ProfileFetcher from "./profile";
 
 const LoginProcess = {
 
@@ -30,7 +31,7 @@ const LoginProcess = {
     },
 
     async loginWithAccount(loginForm) {
-        await axios.post("/user/login", {
+        const response = await axios.post("/user/login", {
             email: loginForm.email,
             password: loginForm.password
         })
@@ -39,35 +40,39 @@ const LoginProcess = {
             if (res.data.code == 200) {
                 // store the token locally
                 store.commit("setToken", res.data.data);
-                // print successful msg
-                MsgIndicator.success("Welcome back!");
-                // redirect to media home page
-                router.push("/home");
+                return 1;
             } else {
                 // print the error message
                 MsgIndicator.error(res.data.message);
-                // redirect to login page
-                router.push("/login");
+                return 0;
             }
         })
         .catch(err => {
             Notification.alert(err);
-        })
+        });
+
+        if (response == 1) {
+            // fetch the user profile
+            await ProfileFetcher.fetchUserProfile();
+            // print successful msg
+            MsgIndicator.success("Welcome back " + store.getters.getUserProfile.nickname +"!");
+            // redirect to media home page
+            router.push("/home");
+        } else {
+            // redirect to login page
+            router.push("/login");
+        }
     },
 
     async loginWithToken() {
         // get token
-        let auth = localStorage.token;
-        await axios.post("/user/login", {
+        let auth = store.getters.getAuth;
+        const status = await axios.post("/user/login", {
             token: auth
         })
         .then(res => {
             // check http code
             if (res.data.code == 200) {
-                // print successful msg
-                MsgIndicator.success("Welcome back!");
-                // commit to vuex store cache
-                store.commit("setToken", localStorage.token);
                 return 1;
             } else {
                 // print error msg
@@ -77,7 +82,16 @@ const LoginProcess = {
         })
         .catch(err => {
             Notification.alert(err);
-        })
+        });
+
+        if (status === 1) {
+            // fetch the user profile
+            await ProfileFetcher.fetchUserProfile();
+            // print successful msg
+            MsgIndicator.success("Welcome back " + store.getters.getUserProfile.nickname +"!");
+            return 1;
+        }
+        return 0;
     }
 };
 

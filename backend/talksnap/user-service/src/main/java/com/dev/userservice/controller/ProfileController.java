@@ -91,8 +91,8 @@ public class ProfileController {
      * @return user's profile
      */
     @GetMapping("/search/{username}")
-    public GeneralResponse<List<Map<String, Object>>> searchUser(@PathVariable String username) {
-        return profileService.searchUser(username);
+    public GeneralResponse<List<Map<String, Object>>> searchUser(@RequestHeader("Authorization") String auth, @PathVariable String username) {
+        return profileService.searchUser(auth, username);
     }
 
 

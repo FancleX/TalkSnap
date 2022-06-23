@@ -3,9 +3,7 @@
     <el-container>
       <el-header><Navbar /></el-header>
       <el-main class="main">
-        <router-view
-          :key="$route.fullPath"
-        />
+        <router-view :key="$route.fullPath" />
       </el-main>
       <el-footer><Footer /></el-footer>
     </el-container>
@@ -15,6 +13,7 @@
 <script>
 import Navbar from "@/components/Navbar.vue";
 import Footer from "@/components/Footer.vue";
+import ProfileFetcher from "./service/user/profile";
 
 export default {
   name: "HomeView",
@@ -23,19 +22,16 @@ export default {
     Footer,
   },
   created() {
-    if (localStorage.getItem("token")) {
-      this.$store.replaceState(
-        Object.assign(
-          {},
-          this.$store.state.token,
-          localStorage.getItem("token")
-        )
-      );
+    // has token don't have profile
+    if (localStorage.token) {
+      this.$store.commit("setToken", localStorage.token);
+      ProfileFetcher.fetchUserProfile();
     }
+
     window.addEventListener("beforeunload", () => {
-      localStorage.setItem("token", this.$store.state.token);
+      localStorage.setItem("token", this.$store.state.getters.getAuth);
     });
-  }
+  },
 };
 </script>
 

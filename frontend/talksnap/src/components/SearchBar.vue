@@ -1,5 +1,5 @@
 <template>
-  <div class="searchbar">
+  <div class="searchbar"> 
     <el-form :model="basicInfo" size="default" label-width="100px">
       <el-form-item prop="startDate" style="width: 100%; margin: auto">
         <el-autocomplete
@@ -40,18 +40,11 @@ export default {
   methods: {
     async querySearchAsync(queryString, callback) {
       let list = [];
-      // let wtParams = {
-      //   pageNo: 0,
-      //   countPerPage: 5,
-      //   displayName: queryString,
-      // };
       if (queryString) {
         // get object list
         const result = await ProfileFetcher.searchUser(queryString);
         list = result;
         for (let i = 0; i < list.length; i++) {
-          // exclude self
-          // if (list[i].id === this.$store.getters.getUserProfile.id)
           list[i].value = list[i].nickname;
         }
         setTimeout(() => {
@@ -60,6 +53,12 @@ export default {
       }
     },
     handleSelect(item) {
+      // get selected object
+      const user = item;
+      // parse the user info and display the individual block
+      
+
+
       console.log("点击当前项的value值" + item.value);
     },
   },

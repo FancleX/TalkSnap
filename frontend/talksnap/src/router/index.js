@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import store from '@/store/index.js'
 import HomeView from '../views/HomeView.vue'
 import LoginProcess from '@/service/user/login'
+import ProfileView from '@/views/ProfileView.vue'
 
 const routes = [
   {
@@ -21,11 +22,11 @@ const routes = [
   },
   {
     path: '/home',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
+    name: 'profile',
+    components: {
+      default: ProfileView,
+
+    }
   }
 ]
 
@@ -37,11 +38,11 @@ const router = createRouter({
 let isLogin = false;
 // router guard
 router.beforeEach(async (to, from, next) => {
-  if ((to.path !== "/login" && to.path !== "/signup" && to.path !== "/") && !localStorage.token) {
+  if ((to.path !== "/login" && to.path !== "/signup" && to.path !== "/") && !store.getters.getAuth) {
     next({ name: 'login' });
   }
   // auto login
-  if (to.path === "/login" && localStorage.token && !isLogin) {
+  if (to.path === "/login" && store.getters.getAuth && !isLogin) {
     if (LoginProcess.loginWithToken()) {
       isLogin = true;
       next('/home');

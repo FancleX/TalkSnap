@@ -98,10 +98,17 @@ public class ProfileService {
         return HTTPResult.fail("Please login.");
     }
 
-    public GeneralResponse<List<Map<String, Object>>> searchUser(String username) {
-        // query the name
-        List<Map<String, Object>> userList = userRepository.searchUser(username);
-        return HTTPResult.ok(userList);
+    public GeneralResponse<List<Map<String, Object>>> searchUser(String auth, String username) {
+        // verify the token
+        Map<String, Object> payload = Auth.verify(auth);
+        if (payload != null) {
+            // get user id
+            Long id = (Long) payload.get("userId");
+            // query the name and filter the user self
+            List<Map<String, Object>> userList = userRepository.searchUser(id, username);
+            return HTTPResult.ok(userList);
+        }
+        return HTTPResult.fail("Please login.");
     }
 
 }

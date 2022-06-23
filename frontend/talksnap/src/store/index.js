@@ -10,7 +10,10 @@ export default createStore({
       return state.token;
     },
     getUserProfile(state) {
-      return state.userProfile;
+      if (state.userProfile) {
+        return JSON.parse(state.userProfile);
+      }
+      return null;
     }
   },
   mutations: {
@@ -23,12 +26,10 @@ export default createStore({
       localStorage.removeItem("token");
     },
     setUserProfile(state, profile) {
-      state.userProfile = profile;
-      localStorage.profile = profile;
+      state.userProfile = JSON.stringify(profile);
     },
     deleteProfile(state) {
       state.userProfile = {};
-      localStorage.removeItem("profile");
     }
   },
   actions: {
