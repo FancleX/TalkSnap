@@ -40,6 +40,6 @@ public interface UserRepository extends CrudRepository<User, Long> {
     @Query(value = "SELECT password FROM user_info WHERE id = :userId", nativeQuery = true)
     String getPasswordById(@Param("userId") Long id);
 
-    @Query(value = "SELECT nickname, email, bio, profile_img FROM user_info WHERE id = :userId", nativeQuery = true)
+    @Query(value = "SELECT nickname, email, bio, profile_img, bg_img FROM user_info WHERE id = :userId", nativeQuery = true)
     Map<String, Object> fetchUserProfileById(@Param("userId") Long id);
 }

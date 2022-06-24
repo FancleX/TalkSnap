@@ -40,5 +40,10 @@ public class User implements Serializable {
 
     private String bio;
 
+    @Lob
+    @Type(type = "org.hibernate.type.BinaryType")
+    @Column(name = "bgImg")
+    private byte[] backgroundImg;
+
 }
 

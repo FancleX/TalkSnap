@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Map;
+
 /**
  * Picture controller helps to update the user profile image storage.
  */
@@ -20,8 +22,16 @@ public class PictureController {
         this.pictureService = pictureService;
     }
 
+    /**
+     * upload img and update the profile image or background img
+     *
+     * @param auth
+     * @param purpose { type: "profile" or "background"}
+     * @param file
+     * @return
+     */
     @PostMapping("/imgUpdate")
-    public GeneralResponse<byte[]> uploadImg(@RequestHeader("authorization") String auth, MultipartFile file) {
-        return pictureService.uploadImg(auth, file);
+    public GeneralResponse<byte[]> uploadImg(@RequestHeader("authorization") String auth, @RequestHeader Map<String, String> purpose, MultipartFile file) {
+        return pictureService.uploadImg(auth, purpose, file);
     }
 }

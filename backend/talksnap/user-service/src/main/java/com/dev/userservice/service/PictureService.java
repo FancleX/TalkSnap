@@ -31,7 +31,7 @@ public class PictureService {
      * @return the picture
      */
     @Transactional
-    public GeneralResponse<byte[]> uploadImg(String auth, MultipartFile file) {
+    public GeneralResponse<byte[]> uploadImg(String auth, Map<String, String> purpose, MultipartFile file) {
         // verify auth
         Map<String, Object> payload = Auth.verify(auth);
         if (payload != null) {
@@ -42,7 +42,12 @@ public class PictureService {
             // extract the img file
             // save the img
             try {
-                user.setProfileImg(file.getBytes());
+                // determine purpose
+                if ("profile".equalsIgnoreCase(purpose.get("type"))) {
+                    user.setProfileImg(file.getBytes());
+                } else {
+                    user.setBackgroundImg(file.getBytes());
+                }
                 return HTTPResult.ok(file.getBytes());
             } catch (IOException e) {
                 return HTTPResult.fail("Cannot upload the image, please try again.");

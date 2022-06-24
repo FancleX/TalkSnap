@@ -10,7 +10,7 @@
         <div style="padding: 14px">
           <ul>
             <li>
-              <span>{{ userInfo.nickname }}</span>
+              <span>{{ "@ " + userInfo.nickname }}</span>
             </li>
             <li>
               <span>{{ "Email: " + userInfo.email }}</span>
@@ -21,7 +21,7 @@
             </li>
           </ul>
           <div class="bottom">
-            <el-button text class="button">Operating</el-button>
+            <el-button circle class="button" type="warning"><el-icon><Star /></el-icon></el-button>
           </div>
         </div>
       </el-card>
@@ -34,6 +34,7 @@
 import ProfileFetcher from "../service/user/profile";
 import ProfileSk from "@/skeletons/ProfileSk.vue";
 import { computed } from "@vue/runtime-core";
+import { Star } from '@element-plus/icons-vue';
 
 export default {
   name: "BioCard",
@@ -42,8 +43,8 @@ export default {
     return {
       dataReady: false,
       circleUrl: computed(() => {
-        return this.userInfo.profile_img
-          ? this.userInfo.profile_img
+        return  this.userInfo.profile_img
+          ? 'data:image/jpeg;base64,' + this.userInfo.profile_img
           : "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png";
       }),
       userInfo: {
@@ -51,6 +52,7 @@ export default {
         profile_img: String,
         email: String,
         bio: String,
+        bg_img: String
       },
     };
   },
@@ -61,6 +63,7 @@ export default {
     // fetch intro of the user
     // {nickname: xxx, profile_img: xxx, email: xxx, bio: xxx, bg_img: xxx}
     this.userInfo = await ProfileFetcher.fetchUserProfile(id);
+     
     this.dataReady = true;
   },
 };
