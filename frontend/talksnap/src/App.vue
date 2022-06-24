@@ -25,7 +25,10 @@ export default {
     // has token don't have profile
     if (localStorage.token) {
       this.$store.commit("setToken", localStorage.token);
-      ProfileFetcher.fetchUserProfile();
+      if (sessionStorage.isLogin) {
+        this.$store.commit("login");
+        ProfileFetcher.fetchMyProfile();
+      }
     }
 
     window.addEventListener("beforeunload", () => {

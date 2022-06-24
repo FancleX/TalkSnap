@@ -16,7 +16,7 @@ public interface UserRepository extends CrudRepository<User, Long> {
     @Query(value = "SELECT id FROM user_info WHERE email = :userEmail", nativeQuery = true)
     Long getUserIdByEmail(@Param("userEmail") String email);
 
-    @Query(value = "SELECT nickname, email, profile_img FROM user_info WHERE id = :userId", nativeQuery = true)
+    @Query(value = "SELECT nickname, email, profile_img, bio FROM user_info WHERE id = :userId", nativeQuery = true)
     Map<String, Object> getUserProfileById(@Param("userId") Long id);
 
     @Query(value = "SELECT salt FROM user_info WHERE id = :userId", nativeQuery = true)
@@ -34,9 +34,12 @@ public interface UserRepository extends CrudRepository<User, Long> {
     @Query(value = "UPDATE user_info SET password = :password WHERE id = :userId", nativeQuery = true)
     void updatePassword(@Param("password") String password, @Param("userId") Long id);
 
-    @Query(value = "SELECT id, nickname, profile_img FROM user_info WHERE nickname LIKE CONCAT('%',:username,'%') AND id != :userId", nativeQuery = true)
+    @Query(value = "SELECT id, nickname FROM user_info WHERE nickname LIKE CONCAT('%',:username,'%') AND id != :userId", nativeQuery = true)
     List<Map<String, Object>> searchUser(@Param("userId") Long id, @Param("username") String username);
 
     @Query(value = "SELECT password FROM user_info WHERE id = :userId", nativeQuery = true)
     String getPasswordById(@Param("userId") Long id);
+
+    @Query(value = "SELECT nickname, email, bio, profile_img FROM user_info WHERE id = :userId", nativeQuery = true)
+    Map<String, Object> fetchUserProfileById(@Param("userId") Long id);
 }

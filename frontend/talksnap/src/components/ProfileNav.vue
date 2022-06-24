@@ -1,20 +1,18 @@
 <template>
-  <el-row class="tac">
-    <el-col >
-      <h5 class="mb-2">Custom colors</h5>
+  <el-row class="tac" style="max-height: 500px">
+    <el-col>
       <el-menu
-        active-text-color="#ffd04b"
-        background-color="#545c64"
-        class="el-menu-vertical-demo"
-        default-active="2"
-        text-color="#fff"
+        active-text-color="#39C5BB"
+        background-color="rgba(193, 232, 246, 0.1)"
+        text-color="black"
         @open="handleOpen"
         @close="handleClose"
       >
+        <h5 class="mb-2" style="text-align: center; color:black; padding-top: 10px;">DashBoard</h5>
         <el-sub-menu index="1">
           <template #title>
-            <el-icon><location /></el-icon>
-            <span>Navigator One</span>
+            <el-icon><ChatDotRound /></el-icon>
+            <span>Contacts</span>
           </template>
           <el-menu-item-group title="Group One">
             <el-menu-item index="1-1">item one</el-menu-item>
@@ -29,16 +27,16 @@
           </el-sub-menu>
         </el-sub-menu>
         <el-menu-item index="2">
-          <el-icon><icon-menu /></el-icon>
-          <span>Navigator Two</span>
+          <el-icon><Notebook /></el-icon>
+          <span>Channels</span>
         </el-menu-item>
-        <el-menu-item index="3" disabled>
-          <el-icon><document /></el-icon>
-          <span>Navigator Three</span>
+        <el-menu-item index="3">
+          <el-icon><Postcard /></el-icon>
+          <span>Stories</span>
         </el-menu-item>
         <el-menu-item index="4">
           <el-icon><setting /></el-icon>
-          <span>Navigator Four</span>
+          <span>Settings</span>
         </el-menu-item>
       </el-menu>
     </el-col>
@@ -47,17 +45,20 @@
 
 <script>
 import {
-  Document,
-  Menu as IconMenu,
-  Location,
   Setting,
+  ChatDotRound,
+  Notebook,
+  Postcard
 } from '@element-plus/icons-vue'
 
 export default {
     name: "ProfileNav",
     methods: {
         handleOpen(key, keyPath) {
-                console.log(key, keyPath)
+            console.log(key, keyPath)   
+            if (key === "4") {
+              this.$router.push('/profile')
+            }
         },
         handleClose(key, keyPath) {
             console.log(key, keyPath)
@@ -66,3 +67,7 @@ export default {
 }
 
 </script>
+
+<style scoped>
+
+</style>

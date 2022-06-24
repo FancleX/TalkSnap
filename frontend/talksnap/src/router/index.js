@@ -3,6 +3,7 @@ import store from '@/store/index.js'
 import HomeView from '../views/HomeView.vue'
 import LoginProcess from '@/service/user/login'
 import ProfileView from '@/views/ProfileView.vue'
+import BioCard from '@/components/BioCard.vue'
 
 const routes = [
   {
@@ -22,12 +23,17 @@ const routes = [
   },
   {
     path: '/home',
-    name: 'profile',
-    components: {
-      default: ProfileView,
-
-    }
-  }
+    name: 'mainpage',
+    component: ProfileView,
+    children: [
+      {
+        // params: {id: xxx, nickname: xxx}
+        path: '/profile/:user',
+        name: 'biocard',
+        component: BioCard
+      }
+    ]
+  },
 ]
 
 const router = createRouter({
@@ -35,19 +41,18 @@ const router = createRouter({
   routes
 })
 
-let isLogin = false;
 // router guard
 router.beforeEach(async (to, from, next) => {
   if ((to.path !== "/login" && to.path !== "/signup" && to.path !== "/") && !store.getters.getAuth) {
     next({ name: 'login' });
   }
   // auto login
-  if (to.path === "/login" && store.getters.getAuth && !isLogin) {
+  if (to.path === "/login" && store.getters.getAuth && !store.getters.isLogin) {
     if (LoginProcess.loginWithToken()) {
-      isLogin = true;
+      store.commit('login');
       next('/home');
     } else {
-      next();
+      next('/login');
     }
   }
   else {

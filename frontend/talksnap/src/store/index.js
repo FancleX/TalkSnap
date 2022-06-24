@@ -3,17 +3,21 @@ import { createStore } from 'vuex'
 export default createStore({
   state: {
     token: "",
-    userProfile: {}
+    userProfile: {},
+    isLogin: false
   },
   getters: {
     getAuth(state) {
       return state.token;
     },
-    getUserProfile(state) {
+    getMyProfile(state) {
       if (state.userProfile) {
         return JSON.parse(state.userProfile);
       }
       return null;
+    },
+    isLogin(state) {
+      return state.isLogin;
     }
   },
   mutations: {
@@ -25,11 +29,15 @@ export default createStore({
       state.token = "";
       localStorage.removeItem("token");
     },
-    setUserProfile(state, profile) {
+    setMyProfile(state, profile) {
       state.userProfile = JSON.stringify(profile);
     },
     deleteProfile(state) {
       state.userProfile = {};
+    },
+    login(state) {
+      state.isLogin = true;
+      sessionStorage.isLogin = true;
     }
   },
   actions: {
@@ -40,7 +48,7 @@ export default createStore({
     // use for user change something with a new token issued
     updateToken(context, token, profile) {
       context.commit("setToken", token);
-      context.commit("setUserProfile", profile);
+      context.commit("setMyProfile", profile);
     }
   },
   modules: {

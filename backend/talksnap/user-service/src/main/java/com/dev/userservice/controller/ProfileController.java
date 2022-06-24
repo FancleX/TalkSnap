@@ -24,7 +24,7 @@ public class ProfileController {
      * Fetch user info.
      *
      * @param auth
-     * @return use info {nickname: xxx, email: xxx, profileImg: xxx}
+     * @return use info {nickname: xxx, email: xxx, profileImg: xxx, bio: xxx}
      */
     @GetMapping("/fetchUser")
     public GeneralResponse<Map<String, Object>> fetchUser(@RequestHeader("Authorization") String auth) {
@@ -85,7 +85,7 @@ public class ProfileController {
      * Use for a user search another user,
      * return the queried user's profile.
      * look up username
-     * profile will be  {id:xxx, name:xxx, profileImg:xxx}
+     * profile will be {id:xxx, name:xxx}
      *
      * @param username
      * @return user's profile
@@ -95,6 +95,17 @@ public class ProfileController {
         return profileService.searchUser(auth, username);
     }
 
+    /**
+     * Get a user profile by its id
+     *
+     * @param auth
+     * @param id
+     * @return user profile {nickname: xxx, profile_img: xxx, email: xxx, bio: xxx}
+     */
+    @GetMapping("/fetch/{id}")
+    public GeneralResponse<Map<String, Object>> fetchUserProfileById(@RequestHeader("Authorization") String auth, @PathVariable Long id) {
+        return profileService.fetchUserProfileById(auth, id);
+    }
 
 
 }

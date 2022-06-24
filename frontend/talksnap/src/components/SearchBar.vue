@@ -54,12 +54,9 @@ export default {
     },
     handleSelect(item) {
       // get selected object
-      const user = item;
-      // parse the user info and display the individual block
-      
-
-
-      console.log("点击当前项的value值" + item.value);
+      const user = JSON.stringify(item);
+      // transfer the user info and display the individual bio
+      this.$router.push({ name:'biocard', params: { user: encodeURIComponent(user) } });
     },
   },
 };

@@ -40,6 +40,7 @@ const LoginProcess = {
             if (res.data.code == 200) {
                 // store the token locally
                 store.commit("setToken", res.data.data);
+                store.commit("login");
                 return 1;
             } else {
                 // print the error message
@@ -53,9 +54,9 @@ const LoginProcess = {
 
         if (response == 1) {
             // fetch the user profile
-            await ProfileFetcher.fetchUserProfile();
+            await ProfileFetcher.fetchMyProfile();
             // print successful msg
-            MsgIndicator.success("Welcome back " + store.getters.getUserProfile.nickname +"!");
+            MsgIndicator.success("Welcome back " + store.getters.getMyProfile.nickname +"!");
             // redirect to media home page
             router.push("/home");
         } else {
@@ -86,9 +87,9 @@ const LoginProcess = {
 
         if (status === 1) {
             // fetch the user profile
-            await ProfileFetcher.fetchUserProfile();
+            await ProfileFetcher.fetchMyProfile();
             // print successful msg
-            MsgIndicator.success("Welcome back " + store.getters.getUserProfile.nickname +"!");
+            MsgIndicator.success("Welcome back " + store.getters.getMyProfile.nickname +"!");
             return 1;
         }
         return 0;

@@ -37,5 +37,8 @@ public class User implements Serializable {
     @Type(type = "org.hibernate.type.BinaryType")
     @Column(name = "profileImg")
     private byte[] profileImg;
+
+    private String bio;
+
 }
 

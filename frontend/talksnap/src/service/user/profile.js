@@ -5,14 +5,14 @@ import store from "@/store";
 const ProfileFetcher = {
 
     // fetch with token
-    async fetchUserProfile() {
+    async fetchMyProfile() {
         await axios.get("/user/profile/fetchUser")
         .then(res => {
             if (res.data.code == 200) {
                 // create a user profile
                 const profile = res.data.data;
                 // store the profile
-                store.commit("setUserProfile", profile);
+                store.commit("setMyProfile", profile);
             }
         })
         .catch(err => {
@@ -29,6 +29,18 @@ const ProfileFetcher = {
             Notification.alert(err);
         })
         return data;
+    },
+
+    // query a user and get the profile
+    async fetchUserProfile(id) {
+        const profile = await axios.get("/user/profile/fetch/" + id)
+        .then(res => {
+            return res.data.data;
+        })
+        .catch(err => {
+            Notification.alert(err);
+        })
+        return profile;
     }
     
 

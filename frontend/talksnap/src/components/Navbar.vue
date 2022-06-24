@@ -38,14 +38,14 @@ export default {
   data() {
     return {
       activeIndex: ref("1"),
-      isLogin: computed(() => this.$store.state?.token),
+      isLogin: computed(() => { return this.$store.getters.isLogin})
     };
   },
   methods: {
     handleSelect(key, keyPath) {
       switch (key) {
         case "0":
-          this.$router.push("/");
+          this.$router.push({ name: 'home'});
         case "1":
           this.$router.push("/login");    
       };

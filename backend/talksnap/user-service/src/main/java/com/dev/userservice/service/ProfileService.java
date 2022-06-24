@@ -111,4 +111,15 @@ public class ProfileService {
         return HTTPResult.fail("Please login.");
     }
 
+    public GeneralResponse<Map<String, Object>> fetchUserProfileById(String auth, Long id) {
+        // verify the token
+        Map<String, Object> payload = Auth.verify(auth);
+        if (payload != null) {
+            // query the name and filter the user self
+            Map<String, Object> userProfile = userRepository.fetchUserProfileById(id);
+            return HTTPResult.ok(userProfile);
+        }
+        return HTTPResult.fail("Please login.");
+    }
+
 }
