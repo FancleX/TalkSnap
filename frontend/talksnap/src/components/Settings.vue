@@ -38,7 +38,8 @@
     </el-form-element>
 
     <el-form-item label="Nickname" prop="nickname">
-      <el-input v-model="form.nickname" :placeholder="myInfo.nickname" clearable />
+      <!-- <el-input v-model="form.nickname" :placeholder="myInfo.nickname" clearable /> -->
+      <el-button text @click="open">{{ myInfo.nickname }}</el-button>
     </el-form-item>
     <el-form-item label="Email" prop="email">
       <el-input v-model="form.email" :placeholder="myInfo.email" clearable />
@@ -115,7 +116,9 @@ export default {
   },
   watch: {
     "$store.state.userProfile"() {
-      this.myInfo = this.$store.getters.getMyProfile;
+        if (this.$store.state.userProfile != null) {
+            this.myInfo = this.$store.getters.getMyProfile;
+        }
     },
   },
   methods: {
@@ -139,6 +142,7 @@ export default {
       this.$refs[formName].validate(async(valid) => {
         if (valid) {
           await ProfileEditor.editProfile(this.form);
+          this.$router.flush()
         } else {
           MsgIndicator.error("Something wrong with your information, please try again");
         }

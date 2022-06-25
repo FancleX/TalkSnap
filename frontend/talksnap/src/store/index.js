@@ -3,7 +3,13 @@ import { createStore } from 'vuex'
 export default createStore({
   state: {
     token: "",
-    userProfile: {},
+    userProfile: {
+      nickname: '',
+      email: '',
+      bio: '',
+      profile_img: '',
+      bg_img: ''
+    },
     isLogin: false
   },
   getters: {

@@ -36,7 +36,7 @@ public class ProfileController {
      * need resign a token.
      *
      * @param auth
-     * @param name
+     * @param data
      * @return new token
      */
     @PutMapping("/edit/name")
@@ -58,7 +58,7 @@ public class ProfileController {
 
     /**
      * Update the password.
-     * {oldPassword:xxx, newPassword}
+     * {oldPassword:xxx, newPassword: xxx}
      *
      * @param auth
      * @param password

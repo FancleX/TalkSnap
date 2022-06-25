@@ -2,10 +2,6 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 
 const MessageBox = {
 
-  selectHandle(select) {
-    
-  },
-
   fileUpload() {
     ElMessageBox.prompt('Please input your e-mail', 'Tip', {
       confirmButtonText: 'OK',

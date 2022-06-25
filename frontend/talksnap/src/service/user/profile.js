@@ -76,7 +76,7 @@ const ProfileEditor = {
             .catch(err => {
                 Notification.alert(err);
             });
-            
+
             if (result != null) {
                 // parse result
                 const { token, nickname } = result;
@@ -88,7 +88,90 @@ const ProfileEditor = {
                 store.dispatch('updateToken', token, profile);
             }
         }
-    }
+    },
+
+    async editEmail(email) {
+        const currentProfile = store.getters.getMyProfile;
+        if (email !== currentProfile.email) {
+            const result = await axios.put('/user/profile/edit/email', { 'email': email })
+            .then(res => {
+                if (res.data.code == 200) {
+                    return res.data.data;
+                }
+                MsgIndicator.error(res.data.message);
+                return null;
+            })
+            .catch(err => {
+                Notification.alert(err);
+            });
+            
+            if (result != null) {
+                // parse result
+                const { email } = result;
+                // reset token and email
+                // get old profile
+                let profile = store.getters.getMyProfile;
+                profile.email = email;
+                // update token
+                store.commit('setMyProfile', profile);
+            }
+        }
+    },
+
+    async editPassword(password) {
+            const result = await axios.put('/user/profile/edit/password', { 'newPassword': email })
+            .then(res => {
+                if (res.data.code == 200) {
+                    return res.data.data;
+                }
+                MsgIndicator.error(res.data.message);
+                return null;
+            })
+            .catch(err => {
+                Notification.alert(err);
+            });
+            
+            if (result != null) {
+                // parse result
+                const { email } = result;
+                // reset token and email
+                // get old profile
+                let profile = store.getters.getMyProfile;
+                profile.email = email;
+                // update token
+                store.commit('setMyProfile', profile);
+            }
+        
+    },
+
+    async editBio(bio) {
+        const currentProfile = store.getters.getMyProfile;
+        if (bio !== currentProfile.bio) {
+            const result = await axios.put('/user/profile/edit/bio', { 'bio': bio })
+            .then(res => {
+                if (res.data.code == 200) {
+                    return res.data.data;
+                }
+                MsgIndicator.error(res.data.message);
+                return null;
+            })
+            .catch(err => {
+                Notification.alert(err);
+            });
+            
+            if (result != null) {
+                // parse result
+                const { email } = result;
+                // reset token and email
+                // get old profile
+                let profile = store.getters.getMyProfile;
+                profile.email = email;
+                // update token
+                store.commit('setMyProfile', profile);
+            }
+        }
+    },
+
 }
 
 export { ProfileFetcher, ProfileEditor };
