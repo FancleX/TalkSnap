@@ -12,10 +12,10 @@
         >Login</el-header
       >
       <el-form-item label="email" prop="email" class="item" style="margin-top: 5rem">
-        <el-input type="email" v-model="loginForm.email" autocomplete></el-input>
+        <el-input type="email" v-model="loginForm.email" autocomplete clearable></el-input>
       </el-form-item>
       <el-form-item label="password" prop="password" class="item">
-        <el-input type="password" v-model="loginForm.password" autocomplete></el-input>
+        <el-input type="password" v-model="loginForm.password" autocomplete clearable></el-input>
       </el-form-item>
       <el-form-item class="item">
         <el-button type="primary" @click="submitForm('loginForm')">Login</el-button>

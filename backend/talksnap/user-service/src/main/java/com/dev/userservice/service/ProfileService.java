@@ -7,7 +7,9 @@ import com.dev.response.HTTPResult;
 import com.dev.userservice.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,16 +36,22 @@ public class ProfileService {
         return HTTPResult.fail("Please login.");
     }
 
-    public GeneralResponse<String> editNickname(String auth, String name) {
+    @Transactional
+    public GeneralResponse<Map<String, String>> editNickname(String auth, Map<String, String> data) {
         // verify the token
         Map<String, Object> payload = Auth.verify(auth);
         if (payload != null) {
             // get user id
             Long id = (Long) payload.get("userId");
+            // parse data
+            String name = data.get("nickname");
             userRepository.updateNickname(name, id);
             // update token
             String newToken = Auth.generateToken(id, name);
-            return HTTPResult.ok(newToken);
+            Map<String, String> result = new HashMap<>();
+            result.put("token", newToken);
+            result.put("nickname", name);
+            return HTTPResult.ok(result);
         }
         return HTTPResult.fail("Please login.");
     }

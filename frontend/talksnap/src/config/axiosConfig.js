@@ -54,6 +54,8 @@ const errorHandle = (status, other) => {
         // Unauthorized
         case 401:
             MsgIndicator.error("Unauthorized");
+            // clear invalid token
+            store.dispatch("deleteToken");
             // redirect to login page
             router.push("/login");
             break;

@@ -3,7 +3,7 @@
     <el-col :span="10">
       <el-card :body-style="{ padding: '0px' }" style="width: 400px" v-if="dataReady">
         <img
-          src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
+          :src="bgImg"
           class="image"
         />
         <el-avatar :size="50" :src="circleUrl" style="margin: 10px" />
@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import ProfileFetcher from "../service/user/profile";
+import { ProfileFetcher } from "../service/user/profile";
 import ProfileSk from "@/skeletons/ProfileSk.vue";
 import { computed } from "@vue/runtime-core";
 import { Star } from '@element-plus/icons-vue';
@@ -46,6 +46,11 @@ export default {
         return  this.userInfo.profile_img
           ? 'data:image/jpeg;base64,' + this.userInfo.profile_img
           : "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png";
+      }),
+      bgImg: computed(() => {
+        return this.userInfo.bg_img
+          ? 'data:image/jpeg;base64,' + this.userInfo.bg_img
+          : "https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png";
       }),
       userInfo: {
         nickname: String,

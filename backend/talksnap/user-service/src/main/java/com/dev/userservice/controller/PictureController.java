@@ -26,12 +26,12 @@ public class PictureController {
      * upload img and update the profile image or background img
      *
      * @param auth
-     * @param purpose { type: "profile" or "background"}
+     * @param purpose type: "profile" or "background"
      * @param file
      * @return
      */
     @PostMapping("/imgUpdate")
-    public GeneralResponse<byte[]> uploadImg(@RequestHeader("authorization") String auth, @RequestHeader Map<String, String> purpose, MultipartFile file) {
+    public GeneralResponse<byte[]> uploadImg(@RequestHeader("authorization") String auth, @RequestHeader("type") String purpose, MultipartFile file) {
         return pictureService.uploadImg(auth, purpose, file);
     }
 }

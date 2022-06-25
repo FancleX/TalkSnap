@@ -13,7 +13,7 @@
 <script>
 import Navbar from "@/components/Navbar.vue";
 import Footer from "@/components/Footer.vue";
-import ProfileFetcher from "./service/user/profile";
+import { ProfileFetcher } from "./service/user/profile";
 
 export default {
   name: "HomeView",

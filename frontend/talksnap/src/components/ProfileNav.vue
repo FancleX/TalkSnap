@@ -1,5 +1,5 @@
 <template>
-  <el-row class="tac" style="max-height: 500px">
+  <el-row class="tac" style="max-height: 500px;">
     <el-col>
       <el-menu
         active-text-color="#39C5BB"
@@ -57,7 +57,7 @@ export default {
         handleOpen(key, keyPath) {
             console.log(key, keyPath)   
             if (key === "4") {
-              this.$router.push('/profile')
+               this.$router.push({ name:'settings' });
             }
         },
         handleClose(key, keyPath) {

@@ -3,7 +3,7 @@ import MsgIndicator from "@/utils/msgIndicator";
 import Notification from "@/utils/notification";
 import store from "@/store";
 import router from "@/router";
-import ProfileFetcher from "./profile";
+import  { ProfileFetcher } from "./profile";
 
 const LoginProcess = {
 

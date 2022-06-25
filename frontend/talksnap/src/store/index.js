@@ -38,7 +38,7 @@ export default createStore({
     login(state) {
       state.isLogin = true;
       sessionStorage.isLogin = true;
-    }
+    },
   },
   actions: {
     deleteToken(context) {
@@ -49,6 +49,16 @@ export default createStore({
     updateToken(context, token, profile) {
       context.commit("setToken", token);
       context.commit("setMyProfile", profile);
+    },
+    setMyProfileAvatar(context, img) {
+      let profile = context.getters.getMyProfile;
+      profile.profile_img = img;
+      context.commit('setMyProfile', profile);
+    },
+    setMyProfileBg(context, img) {
+      let profile = context.getters.getMyProfile;
+      profile.bg_img = img;
+      context.commit('setMyProfile', profile);
     }
   },
   modules: {

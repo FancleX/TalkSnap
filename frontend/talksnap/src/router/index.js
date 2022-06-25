@@ -31,6 +31,11 @@ const routes = [
         path: '/profile/:user',
         name: 'biocard',
         component: BioCard
+      },
+      {
+        path: '/profile/settings',
+        name: 'settings',
+        component: () => import('@/components/Settings.vue')
       }
     ]
   },

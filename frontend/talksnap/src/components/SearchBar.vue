@@ -21,7 +21,7 @@
 
 <script>
 import EllipsisTooltip from "@/components/EllipsisTooltip.vue";
-import ProfileFetcher from "@/service/user/profile";
+import { ProfileFetcher } from "@/service/user/profile";
 import { Search } from "@element-plus/icons-vue";
 
 export default {

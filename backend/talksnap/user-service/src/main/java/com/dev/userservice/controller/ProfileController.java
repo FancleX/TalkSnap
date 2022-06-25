@@ -24,7 +24,7 @@ public class ProfileController {
      * Fetch user info.
      *
      * @param auth
-     * @return use info {nickname: xxx, email: xxx, profileImg: xxx, bio: xxx}
+     * @return use info {nickname: xxx, email: xxx, profileImg: xxx, bio: xxx, bg_img: xxx}
      */
     @GetMapping("/fetchUser")
     public GeneralResponse<Map<String, Object>> fetchUser(@RequestHeader("Authorization") String auth) {
@@ -40,8 +40,8 @@ public class ProfileController {
      * @return new token
      */
     @PutMapping("/edit/name")
-    public GeneralResponse<String> editNickname(@RequestHeader("Authorization") String auth, @RequestBody String name) {
-        return profileService.editNickname(auth, name);
+    public GeneralResponse<Map<String, String>> editNickname(@RequestHeader("Authorization") String auth, @RequestBody Map<String, String> data) {
+        return profileService.editNickname(auth, data);
     }
 
     /**

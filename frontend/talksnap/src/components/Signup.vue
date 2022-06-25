@@ -18,16 +18,16 @@
         >Signup</el-header
       >
       <el-form-item label="nickname" prop="nickname" class="item" style="margin-top: 4rem;">
-        <el-input type="text" v-model="signupForm.nickname" autocomplete></el-input>
+        <el-input type="text" v-model="signupForm.nickname" autocomplete clearable></el-input>
       </el-form-item>
       <el-form-item label="email" prop="email" class="item">
-        <el-input type="email" v-model="signupForm.email" autocomplete></el-input>
+        <el-input type="email" v-model="signupForm.email" autocomplete clearable></el-input>
       </el-form-item>
       <el-form-item label="password" prop="password" class="item">
-        <el-input type="password" v-model="signupForm.password" autocomplete></el-input>
+        <el-input type="password" v-model="signupForm.password" autocomplete clearable></el-input>
       </el-form-item>
       <el-form-item label="confirm password" prop="duplicatedPassword" class="item">
-        <el-input type="password" v-model="signupForm.duplicatedPassword" autocomplete="off"></el-input>
+        <el-input type="password" v-model="signupForm.duplicatedPassword" autocomplete="off" clearable></el-input>
       </el-form-item>
       <el-form-item class="item">
         <el-button type="primary" style="margin-left: 90px;" @click="submitForm('signupForm')">Signup</el-button>
@@ -56,7 +56,7 @@ export default {
             {
             min: 3,
             max: 10,
-            message: "Nickname should be 6 to 20 charaters",
+            message: "Nickname should be 3 to 10 charaters",
             trigger: "blur",
           },
         ],

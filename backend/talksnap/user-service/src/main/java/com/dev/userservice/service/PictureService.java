@@ -31,7 +31,7 @@ public class PictureService {
      * @return the picture
      */
     @Transactional
-    public GeneralResponse<byte[]> uploadImg(String auth, Map<String, String> purpose, MultipartFile file) {
+    public GeneralResponse<byte[]> uploadImg(String auth, String purpose, MultipartFile file) {
         // verify auth
         Map<String, Object> payload = Auth.verify(auth);
         if (payload != null) {
@@ -43,7 +43,7 @@ public class PictureService {
             // save the img
             try {
                 // determine purpose
-                if ("profile".equalsIgnoreCase(purpose.get("type"))) {
+                if ("profile".equalsIgnoreCase(purpose)) {
                     user.setProfileImg(file.getBytes());
                 } else {
                     user.setBackgroundImg(file.getBytes());

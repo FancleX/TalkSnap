@@ -1,6 +1,7 @@
 import axios from "axios";
 import Notification from "@/utils/notification";
 import store from "@/store";
+import MsgIndicator from "@/utils/msgIndicator";
 
 const ProfileFetcher = {
 
@@ -13,6 +14,8 @@ const ProfileFetcher = {
                 const profile = res.data.data;
                 // store the profile
                 store.commit("setMyProfile", profile);
+            } else {
+                MsgIndicator.error(res.data.message);
             }
         })
         .catch(err => {
@@ -23,7 +26,11 @@ const ProfileFetcher = {
     async searchUser(input) {
         const data = await axios.get("/user/profile/search/" + input)
         .then(res => {
-            return res.data.data;
+            if (res.data.code == 200) {
+                return res.data.data;
+            }
+            MsgIndicator.error(res.data.message);
+            return null;
         })
         .catch(err => {
             Notification.alert(err);
@@ -35,15 +42,53 @@ const ProfileFetcher = {
     async fetchUserProfile(id) {
         const profile = await axios.get("/user/profile/fetch/" + id)
         .then(res => {
-            return res.data.data;
+            if (res.data.code == 200) {
+                return res.data.data;
+            }
+            MsgIndicator.error(res.data.message);
+            return null;
         })
         .catch(err => {
             Notification.alert(err);
         })
         return profile;
-    }
-    
-
+    }  
 }
 
-export default ProfileFetcher;
+const ProfileEditor = {
+
+    async editProfile(form) {
+        const { nickname, email, bio } = form;
+        await this.editNickname(nickname);
+    },
+
+    async editNickname(nickname) {
+        const currentProfile = store.getters.getMyProfile;
+        if (nickname !== currentProfile.nickname) {
+            const result = await axios.put('/user/profile/edit/name', { 'nickname': nickname })
+            .then(res => {
+                if (res.data.code == 200) {
+                    return res.data.data;
+                }
+                MsgIndicator.error(res.data.message);
+                return null;
+            })
+            .catch(err => {
+                Notification.alert(err);
+            });
+            
+            if (result != null) {
+                // parse result
+                const { token, nickname } = result;
+                // reset token and nickname
+                // get old profile
+                let profile = store.getters.getMyProfile;
+                profile.nickname = nickname;
+                // update token
+                store.dispatch('updateToken', token, profile);
+            }
+        }
+    }
+}
+
+export { ProfileFetcher, ProfileEditor };

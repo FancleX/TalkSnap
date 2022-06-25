@@ -16,7 +16,7 @@ public interface UserRepository extends CrudRepository<User, Long> {
     @Query(value = "SELECT id FROM user_info WHERE email = :userEmail", nativeQuery = true)
     Long getUserIdByEmail(@Param("userEmail") String email);
 
-    @Query(value = "SELECT nickname, email, profile_img, bio FROM user_info WHERE id = :userId", nativeQuery = true)
+    @Query(value = "SELECT nickname, email, profile_img, bio, bg_img FROM user_info WHERE id = :userId", nativeQuery = true)
     Map<String, Object> getUserProfileById(@Param("userId") Long id);
 
     @Query(value = "SELECT salt FROM user_info WHERE id = :userId", nativeQuery = true)
