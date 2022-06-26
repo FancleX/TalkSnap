@@ -52,7 +52,7 @@ const LoginProcess = {
             Notification.alert(err);
         });
 
-        if (response == 1) {
+        if (response) {
             // fetch the user profile
             await ProfileFetcher.fetchMyProfile();
             // print successful msg
@@ -85,7 +85,7 @@ const LoginProcess = {
             Notification.alert(err);
         });
 
-        if (status === 1) {
+        if (status) {
             // fetch the user profile
             await ProfileFetcher.fetchMyProfile();
             // print successful msg

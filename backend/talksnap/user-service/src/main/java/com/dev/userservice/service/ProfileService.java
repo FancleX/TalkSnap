@@ -56,18 +56,23 @@ public class ProfileService {
         return HTTPResult.fail("Please login.");
     }
 
-    public GeneralResponse<String> editEmail(String auth, String email) {
+    @Transactional
+    public GeneralResponse<Map<String, String>> editEmail(String auth, Map<String, String> data) {
         // verify the token
         Map<String, Object> payload = Auth.verify(auth);
         if (payload != null) {
             // get user id
             Long id = (Long) payload.get("userId");
+            String email = data.get("email");
             userRepository.updateEmail(email, id);
-            return HTTPResult.ok(email);
+            Map<String, String> result = new HashMap<>();
+            result.put("email", email);
+            return HTTPResult.ok(result);
         }
         return HTTPResult.fail("Please login.");
     }
 
+    @Transactional
     public GeneralResponse<String> editPassword(String auth, Map<String, String> password) {
         // verify the token
         Map<String, Object> payload = Auth.verify(auth);
@@ -76,11 +81,13 @@ public class ProfileService {
             Long id = (Long) payload.get("userId");
             // get the old password of the user
             String oldPassword = userRepository.getPasswordById(id);
-            // check if the old password is correct
+            // get md5 of the old password of the input
+            // query salt of the user
+            String salt = userRepository.getUserSaltById(id);
             String oldPasswordFromInput = password.get("oldPassword");
+            oldPasswordFromInput = Encryption.md5(oldPasswordFromInput, salt);
+            // check if the old password is correct
             if (oldPassword.equals(oldPasswordFromInput)) {
-                // query salt of the user
-                String salt = userRepository.getUserSaltById(id);
                 // encrypt new password
                 String newPassword = password.get("newPassword");
                 String md5Password = Encryption.md5(newPassword, salt);
@@ -90,6 +97,22 @@ public class ProfileService {
             }
             // if the old password is incorrect
             return HTTPResult.fail("The password is incorrect.");
+        }
+        return HTTPResult.fail("Please login.");
+    }
+
+    @Transactional
+    public GeneralResponse<Map<String, String>> editBio(String auth, Map<String, String> data) {
+        // verify the token
+        Map<String, Object> payload = Auth.verify(auth);
+        if (payload != null) {
+            // get user id
+            Long id = (Long) payload.get("userId");
+            String bio = data.get("bio");
+            userRepository.updateBio(bio, id);
+            Map<String, String> result = new HashMap<>();
+            result.put("bio", bio);
+            return HTTPResult.ok(result);
         }
         return HTTPResult.fail("Please login.");
     }

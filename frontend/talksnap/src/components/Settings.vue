@@ -1,18 +1,13 @@
 <template>
-  <el-form
-    :model="form"
-    label-width="120px"
-    class="settingform"
-    ref="form"
-    :rules="rules"
-  >
+  <el-form label-width="120px" class="settingform">
     <el-form-element>
       <el-upload
-        action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+        action="https://www.mocky.io/v2/5185415ba171ea3a00704eed/posts/"
         :show-file-list="false"
         :on-success="handleImgSuccess"
         :before-upload="beforeImgUpload"
         @click="handleSelect('0')"
+        ref="upload"
       >
         <img class="image" :src="bgImg" title="Edit" />
       </el-upload>
@@ -20,12 +15,13 @@
 
     <el-form-element>
       <el-upload
-        action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+        action="https://www.mocky.io/v2/5185415ba171ea3a00704eed/posts/"
         :show-file-list="false"
         :on-success="handleImgSuccess"
         :before-upload="beforeImgUpload"
         style="width: auto; margin-left: 20px"
         @click="handleSelect('1')"
+        ref="upload"
       >
         <el-avatar
           :size="50"
@@ -37,21 +33,25 @@
       </el-upload>
     </el-form-element>
 
-    <el-form-item label="Nickname" prop="nickname">
-      <!-- <el-input v-model="form.nickname" :placeholder="myInfo.nickname" clearable /> -->
-      <el-button text @click="open">{{ myInfo.nickname }}</el-button>
+    <el-form-item label="Nickname">
+      <el-button text @click="handleSelect('2')" bg>{{ myInfo.nickname }}</el-button>
     </el-form-item>
-    <el-form-item label="Email" prop="email">
-      <el-input v-model="form.email" :placeholder="myInfo.email" clearable />
+    <el-form-item label="Email">
+      <el-button text @click="handleSelect('3')" bg>{{ myInfo.email }}</el-button>
     </el-form-item>
     <el-form-item label="Password">
-      <el-input placeholder="*********" clearable />
+      <el-button text @click="dialogFormVisible = true" bg>*********</el-button>
+      <DialogBox v-model="dialogFormVisible" />
     </el-form-item>
     <el-form-item label="Bio">
-      <el-input v-model="form.bio" type="textarea" maxlength="100" show-word-limit />
-    </el-form-item>
-    <el-form-item>
-      <el-button type="primary" @click="submitForm('form')">Edit</el-button>
+      <el-input
+        type="textarea"
+        maxlength="150"
+        show-word-limit
+        @keyup.enter="handleSelect('4')"
+        :placeholder="myInfo.bio"
+        v-model="content"
+      />
     </el-form-item>
   </el-form>
 </template>
@@ -62,17 +62,17 @@ import { Plus } from "@element-plus/icons-vue";
 import MsgIndicator from "@/utils/msgIndicator";
 import FileProcessor from "@/utils/fileProcessor";
 import { ProfileEditor } from "../service/user/profile";
+import MessageBox from "@/utils/messageBox";
+import DialogBox from "@/components/DialogBox.vue";
 
 export default {
   name: "Settings",
+  components: { DialogBox },
   data() {
     return {
       select: "",
-      form: {
-        nickname: "",
-        email: "",
-        bio: "",
-      },
+      content: "",
+      dialogFormVisible: false,
       myInfo: {
         nickname: String,
         profile_img: String,
@@ -90,25 +90,9 @@ export default {
           ? "data:image/jpeg;base64," + this.myInfo.bg_img
           : "https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png";
       }),
-      rules: {
-        nickname: [
-          { required: true, message: "Nickname cannot be empty", trigger: "blur" },
-          {
-            min: 3,
-            max: 10,
-            message: "Nickname should be 3 to 10 charaters",
-            trigger: "blur",
-          },
-        ],
-        email: [
-          { required: true, message: "Email cannot be empty", trigger: "blur" },
-          {
-            pattern: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-            message: "Invalid email format",
-            trigger: "blur",
-          },
-        ],
-      },
+      bio: computed(() => {
+        return this.myInfo.bio ? this.myInfo.bio : "Hey there! I am using TalkSnap.";
+      }),
     };
   },
   mounted() {
@@ -116,9 +100,7 @@ export default {
   },
   watch: {
     "$store.state.userProfile"() {
-        if (this.$store.state.userProfile != null) {
-            this.myInfo = this.$store.getters.getMyProfile;
-        }
+      this.myInfo = this.$store.getters.getMyProfile;
     },
   },
   methods: {
@@ -132,23 +114,25 @@ export default {
       }
       return true;
     },
-    handleImgSuccess(response, uploadFile) {
-      FileProcessor.upload(uploadFile, this.select);
+    async handleImgSuccess(response, uploadFile) {
+      await FileProcessor.upload(uploadFile, this.select);
+      this.$refs.upload.clearFiles();
     },
     handleSelect(key) {
       this.select = key;
-    },
-    submitForm(formName) {
-      this.$refs[formName].validate(async(valid) => {
-        if (valid) {
-          await ProfileEditor.editProfile(this.form);
-          this.$router.flush()
-        } else {
-          MsgIndicator.error("Something wrong with your information, please try again");
-        }
-      });
+      if (key === "2") {
+        MessageBox.editNickname();
+      }
+      if (key === "3") {
+        MessageBox.editEmail();
+      }
+      if (key === "4") {
+        ProfileEditor.editBio(this.content);
+        this.content = "";
+      }
     },
   },
+  components: { DialogBox },
 };
 </script>
 
@@ -174,11 +158,11 @@ export default {
 
 .image:hover {
   transform: scale(1.03);
-  transition: 500ms ease-in-out;
+  transition: 400ms;
 }
 
 .avatar:hover {
   transform: scale(1.1);
-  transition: 500ms ease-in-out;
+  transition: 400ms;
 }
 </style>

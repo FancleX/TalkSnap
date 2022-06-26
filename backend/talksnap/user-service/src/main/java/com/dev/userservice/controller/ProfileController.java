@@ -48,12 +48,12 @@ public class ProfileController {
      * Update the email.
      *
      * @param auth
-     * @param email
+     * @param data
      * @return updated email
      */
     @PutMapping("/edit/email")
-    public GeneralResponse<String> editEmail(@RequestHeader("Authorization") String auth, @RequestBody String email) {
-        return profileService.editEmail(auth, email);
+    public GeneralResponse<Map<String, String>> editEmail(@RequestHeader("Authorization") String auth, @RequestBody Map<String, String> data) {
+        return profileService.editEmail(auth, data);
     }
 
     /**
@@ -69,6 +69,17 @@ public class ProfileController {
         return profileService.editPassword(auth, password);
     }
 
+    /**
+     * Update the bio.
+     *
+     * @param auth
+     * @param data
+     * @return new bio
+     */
+    @PutMapping("edit/bio")
+    public GeneralResponse<Map<String, String>> editBio(@RequestHeader("Authorization") String auth, @RequestBody Map<String, String> data) {
+        return profileService.editBio(auth, data);
+    }
 
     /**
      * Delete user account.

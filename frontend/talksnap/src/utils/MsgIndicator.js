@@ -15,6 +15,12 @@ const MsgIndicator = {
   },
   error(msg) {
     ElMessage.error(msg)
+  },
+  info(msg) {
+    ElMessage({
+      message: msg,
+      type: 'info',
+    })
   }
 }
 

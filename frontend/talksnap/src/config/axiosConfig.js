@@ -14,7 +14,7 @@ if (reg.test(host)) {
 }
 
 // request interceptor
-axios.interceptors.request.use(function (config) {
+axios.interceptors.request.use((config) => {
     // exclude the login and home and signup page
     let path = router.path;
     if (path != "/" || path != "/login" || path != "/signup") {
@@ -24,16 +24,16 @@ axios.interceptors.request.use(function (config) {
         }
     }
     return config;
-}, function (error) {
+}, (error) => {
     // redirect to home page
     router.push("/");
     return Promise.reject(error);
 });
 
 // response interceptor
-axios.interceptors.response.use(function (response) {
+axios.interceptors.response.use((response) => {
     return response.status === 200 ? Promise.resolve(response) : Promise.reject(response);
-}, function (error) {
+},  (error) => {
     // response error
     const { response } = error;
     if (response) {

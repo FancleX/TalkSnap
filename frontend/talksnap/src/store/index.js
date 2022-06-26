@@ -3,13 +3,7 @@ import { createStore } from 'vuex'
 export default createStore({
   state: {
     token: "",
-    userProfile: {
-      nickname: '',
-      email: '',
-      bio: '',
-      profile_img: '',
-      bg_img: ''
-    },
+    userProfile: {},
     isLogin: false
   },
   getters: {
@@ -45,27 +39,27 @@ export default createStore({
       state.isLogin = true;
       sessionStorage.isLogin = true;
     },
+    logout(state) {
+      state.isLogin = false;
+      sessionStorage.isLogin = false;
+    }
   },
   actions: {
     deleteToken(context) {
       context.commit("deleteToken");
       context.commit("deleteProfile");
+      context.commit("logout");
     },
-    // use for user change something with a new token issued
-    updateToken(context, token, profile) {
-      context.commit("setToken", token);
-      context.commit("setMyProfile", profile);
-    },
-    setMyProfileAvatar(context, img) {
-      let profile = context.getters.getMyProfile;
-      profile.profile_img = img;
-      context.commit('setMyProfile', profile);
-    },
-    setMyProfileBg(context, img) {
-      let profile = context.getters.getMyProfile;
-      profile.bg_img = img;
-      context.commit('setMyProfile', profile);
-    }
+    // setMyProfileAvatar(context, img) {
+    //   let profile = context.getters.getMyProfile;
+    //   profile.profile_img = img;
+    //   context.commit('setMyProfile', profile);
+    // },
+    // setMyProfileBg(context, img) {
+    //   let profile = context.getters.getMyProfile;
+    //   profile.bg_img = img;
+    //   context.commit('setMyProfile', profile);
+    // }
   },
   modules: {
   }

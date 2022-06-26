@@ -15,7 +15,7 @@ const FileProcessor = {
     const config = {
       headers: {
         'Content-Type': 'multipart/form-data',
-        'type': type
+        'Type': type
       }
     }
     // create form data object
@@ -34,12 +34,16 @@ const FileProcessor = {
         Notification.alert(err)
       });
 
-    if (result != null) {
+    if (result) {
       // store locally
+      // alter the profile
+      let profile = store.getters.getMyProfile;
       if (select === '0') {
-        store.dispatch('setMyProfileBg', result);
+        profile.bg_img = result;
+        store.commit('setMyProfile', profile)
       } else {
-        store.dispatch('setMyProfileAvatar', result);
+        profile.profile_img = result;
+        store.commit('setMyProfile', profile);
       }
     }
   },
