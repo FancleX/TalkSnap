@@ -1,22 +1,22 @@
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { ElMessage } from 'element-plus'
 
 const MsgIndicator = {
-  success(msg) {
+  success: (msg) => {
     ElMessage({
       message: msg,
       type: 'success',
     })
   },
-  warning(msg) {
+  warning: (msg) => {
     ElMessage({
       message: msg,
       type: 'warning',
     })
   },
-  error(msg) {
+  error: (msg) => {
     ElMessage.error(msg)
   },
-  info(msg) {
+  info: (msg) => {
     ElMessage({
       message: msg,
       type: 'info',

@@ -7,7 +7,8 @@ import router from "@/router";
 const ProfileFetcher = {
 
     // fetch with token
-    async fetchMyProfile() {
+    // fetch with token
+    fetchMyProfile: async () => {
         await axios.get("/user/profile/fetchUser")
             .then(res => {
                 if (res.data.code == 200) {
@@ -21,10 +22,10 @@ const ProfileFetcher = {
             })
             .catch(err => {
                 Notification.alert(err);
-            })
+            });
     },
 
-    async searchUser(input) {
+    searchUser: async (input) => {
         const data = await axios.get("/user/profile/search/" + input)
             .then(res => {
                 if (res.data.code == 200) {
@@ -40,7 +41,7 @@ const ProfileFetcher = {
     },
 
     // query a user and get the profile
-    async fetchUserProfile(id) {
+    fetchUserProfile: async (id) => {
         const profile = await axios.get("/user/profile/fetch/" + id)
             .then(res => {
                 if (res.data.code == 200) {
@@ -58,7 +59,7 @@ const ProfileFetcher = {
 
 const ProfileEditor = {
 
-    async editNickname(nickname) {
+    editNickname: async (nickname) => {
         const currentProfile = store.getters.getMyProfile;
         if (nickname !== currentProfile.nickname) {
             const result = await axios.put('/user/profile/edit/name', { 'nickname': nickname })
@@ -89,7 +90,7 @@ const ProfileEditor = {
         }
     },
 
-    async editEmail(email) {
+    editEmail: async (email) => {
         const currentProfile = store.getters.getMyProfile;
         if (email !== currentProfile.email) {
             const result = await axios.put('/user/profile/edit/email', { 'email': email })
@@ -119,7 +120,7 @@ const ProfileEditor = {
         }
     },
 
-    async editPassword(form) {
+    editPassword: async (form) => {
         const { oldPassword, newPassword } = form;
         const result = await axios.put('/user/profile/edit/password', {
             'oldPassword': oldPassword,
@@ -146,7 +147,7 @@ const ProfileEditor = {
         return 0;
     },
 
-    async editBio(bio) {
+    editBio: async (bio) => {
         const currentProfile = store.getters.getMyProfile;
         if (bio !== currentProfile.bio) {
             const result = await axios.put('/user/profile/edit/bio', { 'bio': bio })
@@ -175,18 +176,18 @@ const ProfileEditor = {
         }
     },
 
-    async deleteAccount() {
+    deleteAccount: async () => {
         await axios.delete('/user/profile/delete')
-        .then(res => {
-            if (res.data.code == 200) {
-                MsgIndicator.success(res.data.data);
-            } else {
-                MsgIndicator.error(res.data.message);
-            }
-        })
-        .catch(err => {
-            Notification.alert(err);
-        })
+            .then(res => {
+                if (res.data.code == 200) {
+                    MsgIndicator.success(res.data.data);
+                } else {
+                    MsgIndicator.error(res.data.message);
+                }
+            })
+            .catch(err => {
+                Notification.alert(err);
+            })
     }
 
 }

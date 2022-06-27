@@ -45,7 +45,7 @@ export default {
     handleSelect(key, keyPath) {
       switch (key) {
         case "0":
-          this.$router.push({ name: 'home'});
+          this.$router.go(0);
         case "1":
           this.$router.push("/login");    
       };

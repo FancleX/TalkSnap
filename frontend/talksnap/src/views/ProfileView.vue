@@ -11,7 +11,7 @@
       <el-main>
         <el-row style="height: 50px"></el-row>
         <el-row :gutter="20">
-          <el-col :span="12" :offset="7">
+          <el-col :span="12" :offset="6">
             <router-view class="grid-content" />
           </el-col>
         </el-row>

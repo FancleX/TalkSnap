@@ -5,7 +5,7 @@ import store from "@/store";
 
 const FileProcessor = {
 
-  async upload(file, select) {
+  upload: async(file, select) => {
     let type;
     if (select === '0') {
       type = 'background';

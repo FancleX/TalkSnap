@@ -19,7 +19,7 @@
       />
     </el-form-element>
 
-    <el-form-element>
+    <el-form-element class="avatar">
       <el-upload
         action="https://www.mocky.io/v2/5185415ba171ea3a00704eed/posts/"
         :show-file-list="false"
@@ -41,7 +41,6 @@
       <el-progress
         :percentage="progress.percent"
         v-if="progress.onProgressB"
-        width="10px"
         status="success"
       />
     </el-form-element>
@@ -66,9 +65,10 @@
         v-model="content"
       />
     </el-form-item>
-    <el-form-item>
-      <el-space :size="30" spacer="|">
-        <el-switch
+    <el-form-item class="btn">
+      <!-- <el-space :size="30" spacer="|" alignment> -->
+        <el-container style="margin:auto; justify-content: space-evenly;">
+          <el-switch
           v-model="logout"
           class="ml-2"
           style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
@@ -77,17 +77,18 @@
         <el-popconfirm
           confirm-button-text="Yes"
           cancel-button-text="No"
-          :icon="Warning"
+          icon="Warning"
           icon-color="red"
           title="Are you sure to delete your Account?"
           @confirm="confirmEvent"
-          @cancel="close"
         >
           <template #reference>
             <el-button type="danger">Delete Account</el-button>
           </template>
         </el-popconfirm>
-      </el-space>
+        </el-container>
+        
+      <!-- </el-space> -->
     </el-form-item>
   </el-form>
 </template>
@@ -100,7 +101,6 @@ import FileProcessor from "@/utils/fileProcessor";
 import { ProfileEditor } from "../service/user/profile";
 import MessageBox from "@/utils/messageBox";
 import DialogBox from "@/components/DialogBox.vue";
-import store from "@/store";
 
 export default {
   name: "settings",
@@ -200,7 +200,7 @@ export default {
       await ProfileEditor.deleteAccount();
       this.$store.dispatch("deleteToken");
       this.$router.go(0);
-    }
+    },
   },
 };
 </script>
@@ -208,6 +208,7 @@ export default {
 <style scoped>
 .settingform {
   max-width: 500px;
+  min-width: 300px;
   padding: 10px;
   border: 1px outset rgba(57, 197, 187, 0.5);
   border-radius: 14px;
@@ -216,6 +217,14 @@ export default {
 
 .settingform :deep() .el-upload {
   width: 100%;
+}
+
+.btn :deep() .el-form-item__content {
+  margin-left: 0 !important;
+}
+
+.avatar :deep() div {
+  margin-left: 0 !important;
 }
 
 .image {

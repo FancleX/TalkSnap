@@ -7,7 +7,7 @@ import  { ProfileFetcher } from "./profile";
 
 const LoginProcess = {
 
-    async signup(signupForm) {
+    signup: async(signupForm) => {
         // get current time
         let date = new Date();
         await axios.post("/user/signup", {
@@ -30,7 +30,7 @@ const LoginProcess = {
         })
     },
 
-    async loginWithAccount(loginForm) {
+    loginWithAccount: async(loginForm) => {
         const response = await axios.post("/user/login", {
             email: loginForm.email,
             password: loginForm.password
@@ -65,7 +65,7 @@ const LoginProcess = {
         }
     },
 
-    async loginWithToken() {
+    loginWithToken: async() => {
         // get token
         let auth = store.getters.getAuth;
         const status = await axios.post("/user/login", {

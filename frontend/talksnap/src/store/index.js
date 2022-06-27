@@ -11,10 +11,6 @@ export default createStore({
       return state.token;
     },
     getMyProfile(state) {
-
-      // if (state.userProfile) {
-      //   return JSON.parse(state.userProfile);
-      // }
       try {
         return JSON.parse(state.userProfile);
       } catch (e) {

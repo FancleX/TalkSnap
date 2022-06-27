@@ -4,7 +4,7 @@ import MsgIndicator from '@/utils/msgIndicator'
 
 const MessageBox = {
 
-  editNickname() {
+  editNickname: () => {
     ElMessageBox.prompt('Please input your new nickname', 'Tip', {
       confirmButtonText: 'Edit',
       cancelButtonText: 'Cancel',
@@ -43,7 +43,7 @@ const MessageBox = {
       })
   },
 
-  editEmail() {
+  editEmail: () => {
     ElMessageBox.prompt('Please input your new email', 'Tip', {
       confirmButtonText: 'Edit',
       cancelButtonText: 'Cancel',
@@ -77,7 +77,7 @@ const MessageBox = {
       })
   },
 
-  editPassword() {
+  editPassword: () => {
     ElMessageBox.prompt('Please input your new email', 'Tip', {
       confirmButtonText: 'Edit',
       cancelButtonText: 'Cancel',

@@ -3,14 +3,14 @@ import { h } from 'vue';
 
 const Notification = {
 
-    notify(header, msg) {
+    notify: (header, msg) => {
         ElNotification({
           title: header,
           message: h('i', { style: 'color: teal' }, msg),
         })
     },
 
-    alert(msg) {
+    alert: (msg) => {
         ElNotification({
           title: 'Error',
           message: msg,
