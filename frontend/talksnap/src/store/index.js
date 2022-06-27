@@ -64,7 +64,7 @@ export default createStore({
       let profile = context.getters.getMyProfile;
       profile.bg_img = img;
       context.commit('setMyProfile', profile);
-    }
+    },
   },
   modules: {
   }

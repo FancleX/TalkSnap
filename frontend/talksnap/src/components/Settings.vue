@@ -38,7 +38,7 @@
           title="Edit"
         />
       </el-upload>
-       <el-progress
+      <el-progress
         :percentage="progress.percent"
         v-if="progress.onProgressB"
         width="10px"
@@ -66,6 +66,29 @@
         v-model="content"
       />
     </el-form-item>
+    <el-form-item>
+      <el-space :size="30" spacer="|">
+        <el-switch
+          v-model="logout"
+          class="ml-2"
+          style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
+          inactive-text="logout"
+        />
+        <el-popconfirm
+          confirm-button-text="Yes"
+          cancel-button-text="No"
+          :icon="Warning"
+          icon-color="red"
+          title="Are you sure to delete your Account?"
+          @confirm="confirmEvent"
+          @cancel="close"
+        >
+          <template #reference>
+            <el-button type="danger">Delete Account</el-button>
+          </template>
+        </el-popconfirm>
+      </el-space>
+    </el-form-item>
   </el-form>
 </template>
 
@@ -77,6 +100,7 @@ import FileProcessor from "@/utils/fileProcessor";
 import { ProfileEditor } from "../service/user/profile";
 import MessageBox from "@/utils/messageBox";
 import DialogBox from "@/components/DialogBox.vue";
+import store from "@/store";
 
 export default {
   name: "settings",
@@ -86,17 +110,18 @@ export default {
       select: "",
       content: "",
       dialogFormVisible: false,
+      logout: false,
       progress: {
         percent: 0,
         onProgressA: false,
         onProgressB: false,
       },
       myInfo: {
-        nickname: '',
-        profile_img: '',
-        email: '',
-        bio: '',
-        bg_img: '',
+        nickname: "",
+        profile_img: "",
+        email: "",
+        bio: "",
+        bg_img: "",
       },
       circleUrl: computed(() => {
         return this.myInfo.profile_img
@@ -120,6 +145,12 @@ export default {
     "$store.state.userProfile"() {
       this.myInfo = this.$store.getters.getMyProfile;
     },
+    logout() {
+      if (!this.$logout) {
+        this.$store.dispatch("deleteToken");
+        this.$router.go(0);
+      }
+    },
   },
   methods: {
     beforeImgUpload(rawFile) {
@@ -137,13 +168,12 @@ export default {
       this.$refs.upload.clearFiles();
     },
     handleProgress(event, file, fileList) {
-      if (this.select === '0') {
+      if (this.select === "0") {
         this.progress.onProgressA = true;
-      } else if (this.select === '1') {
+      } else if (this.select === "1") {
         this.progress.onProgressB = true;
       }
       this.progress.percent = parseInt(event.percent);
-      console.log(this.progress.percent)
       if (this.progress.percent >= 100) {
         this.progress.percent = 100;
         setTimeout(() => {
@@ -166,6 +196,11 @@ export default {
         this.content = "";
       }
     },
+    async confirmEvent() {
+      await ProfileEditor.deleteAccount();
+      this.$store.dispatch("deleteToken");
+      this.$router.go(0);
+    }
   },
 };
 </script>

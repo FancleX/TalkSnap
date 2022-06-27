@@ -1,5 +1,5 @@
 <template>
-  <el-row class="tac" style="max-height: 500px;">
+  <el-row class="tac" style="max-height: 500px">
     <el-col>
       <el-menu
         active-text-color="#39C5BB"
@@ -8,11 +8,13 @@
         @open="handleOpen"
         @close="handleClose"
       >
-        <h5 class="mb-2" style="text-align: center; color:black; padding-top: 10px;">DashBoard</h5>
+        <h5 class="mb-2" style="text-align: center; color: black; padding-top: 10px">
+          DashBoard
+        </h5>
         <el-sub-menu index="1">
           <template #title>
             <el-icon><ChatDotRound /></el-icon>
-            <span>Contacts</span>
+            <span>Chats</span>
           </template>
           <el-menu-item-group title="Group One">
             <el-menu-item index="1-1">item one</el-menu-item>
@@ -28,13 +30,17 @@
         </el-sub-menu>
         <el-menu-item index="2">
           <el-icon><Notebook /></el-icon>
-          <span>Channels</span>
+          <span>Contacts</span>
         </el-menu-item>
         <el-menu-item index="3">
-          <el-icon><Postcard /></el-icon>
-          <span>Stories</span>
+          <el-icon><Connection /></el-icon>
+          <span>Channels</span>
         </el-menu-item>
         <el-menu-item index="4">
+          <el-icon><Orange /></el-icon>
+          <span>Stories</span>
+        </el-menu-item>
+        <el-menu-item index="5">
           <el-icon><setting /></el-icon>
           <span>Settings</span>
         </el-menu-item>
@@ -44,30 +50,21 @@
 </template>
 
 <script>
-import {
-  Setting,
-  ChatDotRound,
-  Notebook,
-  Postcard
-} from '@element-plus/icons-vue'
 
 export default {
-    name: "ProfileNav",
-    methods: {
-        handleOpen(key, keyPath) {
-            console.log(key, keyPath)   
-            if (key === "4") {
-               this.$router.push({ name:'settings' });
-            }
-        },
-        handleClose(key, keyPath) {
-            console.log(key, keyPath)
-        }
-    }
-}
-
+  name: "ProfileNav",
+  methods: {
+    handleOpen(key, keyPath) {
+      console.log(key, keyPath);
+      if (key === "5") {
+        this.$router.push({ name: "settings" });
+      }
+    },
+    handleClose(key, keyPath) {
+      console.log(key, keyPath);
+    },
+  },
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

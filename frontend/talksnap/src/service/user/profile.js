@@ -175,6 +175,20 @@ const ProfileEditor = {
         }
     },
 
+    async deleteAccount() {
+        await axios.delete('/user/profile/delete')
+        .then(res => {
+            if (res.data.code == 200) {
+                MsgIndicator.success(res.data.data);
+            } else {
+                MsgIndicator.error(res.data.message);
+            }
+        })
+        .catch(err => {
+            Notification.alert(err);
+        })
+    }
+
 }
 
 export { ProfileFetcher, ProfileEditor };
