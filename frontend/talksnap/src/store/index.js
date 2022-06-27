@@ -11,10 +11,15 @@ export default createStore({
       return state.token;
     },
     getMyProfile(state) {
-      if (state.userProfile) {
+
+      // if (state.userProfile) {
+      //   return JSON.parse(state.userProfile);
+      // }
+      try {
         return JSON.parse(state.userProfile);
+      } catch (e) {
+        return null;
       }
-      return null;
     },
     isLogin(state) {
       return state.isLogin;
@@ -41,7 +46,7 @@ export default createStore({
     },
     logout(state) {
       state.isLogin = false;
-      sessionStorage.isLogin = false;
+      sessionStorage.removeItem('isLogin');
     }
   },
   actions: {
@@ -50,16 +55,16 @@ export default createStore({
       context.commit("deleteProfile");
       context.commit("logout");
     },
-    // setMyProfileAvatar(context, img) {
-    //   let profile = context.getters.getMyProfile;
-    //   profile.profile_img = img;
-    //   context.commit('setMyProfile', profile);
-    // },
-    // setMyProfileBg(context, img) {
-    //   let profile = context.getters.getMyProfile;
-    //   profile.bg_img = img;
-    //   context.commit('setMyProfile', profile);
-    // }
+    setMyProfileAvatar(context, img) {
+      let profile = context.getters.getMyProfile;
+      profile.profile_img = img;
+      context.commit('setMyProfile', profile);
+    },
+    setMyProfileBg(context, img) {
+      let profile = context.getters.getMyProfile;
+      profile.bg_img = img;
+      context.commit('setMyProfile', profile);
+    }
   },
   modules: {
   }

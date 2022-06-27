@@ -137,8 +137,10 @@ const ProfileEditor = {
             });
 
         if (result) {
-            // ask for relogin 
             MsgIndicator.success("Edit completed");
+            // ask for relogin 
+            store.dispatch('deleteToken');
+            router.go(0);
             return 1;
         }
         return 0;

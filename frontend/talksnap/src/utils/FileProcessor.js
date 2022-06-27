@@ -37,13 +37,10 @@ const FileProcessor = {
     if (result) {
       // store locally
       // alter the profile
-      let profile = store.getters.getMyProfile;
       if (select === '0') {
-        profile.bg_img = result;
-        store.commit('setMyProfile', profile)
+        store.dispatch('setMyProfileBg', result);
       } else {
-        profile.profile_img = result;
-        store.commit('setMyProfile', profile);
+        store.dispatch('setMyProfileAvatar', result);
       }
     }
   },

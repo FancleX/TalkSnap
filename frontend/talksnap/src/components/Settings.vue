@@ -8,9 +8,15 @@
         :before-upload="beforeImgUpload"
         @click="handleSelect('0')"
         ref="upload"
+        :on-progress="handleProgress"
       >
         <img class="image" :src="bgImg" title="Edit" />
       </el-upload>
+      <el-progress
+        :percentage="progress.percent"
+        v-if="progress.onProgressA"
+        status="success"
+      />
     </el-form-element>
 
     <el-form-element>
@@ -22,6 +28,7 @@
         style="width: auto; margin-left: 20px"
         @click="handleSelect('1')"
         ref="upload"
+        :on-progress="handleProgress"
       >
         <el-avatar
           :size="50"
@@ -31,6 +38,12 @@
           title="Edit"
         />
       </el-upload>
+       <el-progress
+        :percentage="progress.percent"
+        v-if="progress.onProgressB"
+        width="10px"
+        status="success"
+      />
     </el-form-element>
 
     <el-form-item label="Nickname">
@@ -66,19 +79,24 @@ import MessageBox from "@/utils/messageBox";
 import DialogBox from "@/components/DialogBox.vue";
 
 export default {
-  name: "Settings",
+  name: "settings",
   components: { DialogBox },
   data() {
     return {
       select: "",
       content: "",
       dialogFormVisible: false,
+      progress: {
+        percent: 0,
+        onProgressA: false,
+        onProgressB: false,
+      },
       myInfo: {
-        nickname: String,
-        profile_img: String,
-        email: String,
-        bio: String,
-        bg_img: String,
+        nickname: '',
+        profile_img: '',
+        email: '',
+        bio: '',
+        bg_img: '',
       },
       circleUrl: computed(() => {
         return this.myInfo.profile_img
@@ -118,6 +136,23 @@ export default {
       await FileProcessor.upload(uploadFile, this.select);
       this.$refs.upload.clearFiles();
     },
+    handleProgress(event, file, fileList) {
+      if (this.select === '0') {
+        this.progress.onProgressA = true;
+      } else if (this.select === '1') {
+        this.progress.onProgressB = true;
+      }
+      this.progress.percent = parseInt(event.percent);
+      console.log(this.progress.percent)
+      if (this.progress.percent >= 100) {
+        this.progress.percent = 100;
+        setTimeout(() => {
+          this.progress.onProgressA = false;
+          this.progress.onProgressB = false;
+          this.progress.percent = 0;
+        }, 1000);
+      }
+    },
     handleSelect(key) {
       this.select = key;
       if (key === "2") {
@@ -132,7 +167,6 @@ export default {
       }
     },
   },
-  components: { DialogBox },
 };
 </script>
 

@@ -35,7 +35,7 @@ const routes = [
       {
         path: '/profile/settings',
         name: 'settings',
-        component: () => import('@/components/Settings.vue')
+        component:() => import('@/components/Settings.vue')
       }
     ]
   },
@@ -52,7 +52,7 @@ router.beforeEach(async (to, from, next) => {
     next({ name: 'login' });
   }
   // auto login
-  if (to.path === "/login" && store.getters.getAuth && !store.getters.isLogin) {
+  else if (to.path === "/login" && store.getters.getAuth && !store.getters.isLogin) {
     if (LoginProcess.loginWithToken()) {
       store.commit('login');
       next('/home');
