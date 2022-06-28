@@ -53,7 +53,8 @@ router.beforeEach(async (to, from, next) => {
   }
   // auto login
   else if (to.path === "/login" && store.getters.getAuth && !store.getters.isLogin) {
-    if (LoginProcess.loginWithToken()) {
+    const result = await LoginProcess.loginWithToken();
+    if (result) {
       store.commit('login');
       next('/home');
     } else {

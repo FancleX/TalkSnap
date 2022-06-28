@@ -24,7 +24,7 @@ public class ProfileController {
      * Fetch user info.
      *
      * @param auth
-     * @return use info {nickname: xxx, email: xxx, profileImg: xxx, bio: xxx, bg_img: xxx}
+     * @return use info {nickname: xxx, email: xxx, profileImg: xxx, bio: xxx, bg_img: xxx, subscriptions: []}
      */
     @GetMapping("/fetchUser")
     public GeneralResponse<Map<String, Object>> fetchUser(@RequestHeader("Authorization") String auth) {

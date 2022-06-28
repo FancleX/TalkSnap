@@ -6,12 +6,12 @@ import org.hibernate.annotations.Type;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
 
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString
 @AllArgsConstructor
 @Entity
 @Table(name = "user_info")
@@ -45,5 +45,8 @@ public class User implements Serializable {
     @Column(name = "bgImg")
     private byte[] backgroundImg;
 
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "subscriptions")
+    private Set<Subscription> subscriptions;
 }
 

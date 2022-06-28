@@ -19,6 +19,9 @@
               <span v-if="userInfo.bio">{{ "Bio: " + userInfo.bio }}</span>
               <span v-else>{{ "Bio: Hey there! I am using TalkSnap." }}</span>
             </li>
+            <li>
+              <span>{{ "Member since: " + userInfo.created_time.substring(0, 10) }}</span>
+            </li>
           </ul>
           <div class="bottom">
             <el-button circle class="button" type="warning"><el-icon><Star /></el-icon></el-button>
@@ -57,7 +60,8 @@ export default {
         profile_img: String,
         email: String,
         bio: String,
-        bg_img: String
+        bg_img: String,
+        created_time: String
       },
     };
   },
@@ -66,7 +70,7 @@ export default {
     // get id
     const id = JSON.parse(params).id;
     // fetch intro of the user
-    // {nickname: xxx, profile_img: xxx, email: xxx, bio: xxx, bg_img: xxx}
+    // {nickname: xxx, profile_img: xxx, email: xxx, bio: xxx, bg_img: xxx, created_time: xxx}
     this.userInfo = await ProfileFetcher.fetchUserProfile(id);
      
     this.dataReady = true;

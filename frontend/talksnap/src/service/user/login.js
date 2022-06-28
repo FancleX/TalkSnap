@@ -78,6 +78,8 @@ const LoginProcess = {
             } else {
                 // print error msg
                 MsgIndicator.error(res.data.message);
+                // omit the current token if has
+                store.dispatch('deleteToken');
                 return 0;
             }
         })

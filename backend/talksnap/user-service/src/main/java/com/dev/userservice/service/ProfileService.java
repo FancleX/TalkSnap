@@ -4,6 +4,7 @@ import com.dev.auth.Auth;
 import com.dev.encryption.Encryption;
 import com.dev.response.GeneralResponse;
 import com.dev.response.HTTPResult;
+import com.dev.user.User;
 import com.dev.userservice.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,14 @@ public class ProfileService {
             // get id
             Long id = (Long) payload.get("userId");
             // query the user
-            Map<String, Object> userProfile = userRepository.getUserProfileById(id);
+            User user = userRepository.findById(id).get();
+            Map<String, Object> userProfile = new HashMap<>();
+            userProfile.put("nickname", user.getNickname());
+            userProfile.put("email", user.getEmail());
+            userProfile.put("profile_img", user.getProfileImg());
+            userProfile.put("bio", user.getBio());
+            userProfile.put("bg_img", user.getBackgroundImg());
+            userProfile.put("subscriptions", user.getSubscriptions());
             return HTTPResult.ok(userProfile);
         }
         return HTTPResult.fail("Please login.");

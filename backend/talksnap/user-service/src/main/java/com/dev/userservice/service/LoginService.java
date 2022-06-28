@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Map;
 
 @Service
@@ -52,6 +53,7 @@ public class LoginService {
         user.setJoinTime(new Date((long) data.get("joinTime")));
         user.setSalt(salt);
         user.setPassword(newPassword);
+        user.setSubscriptions(null);
         userRepository.save(user);
         return HTTPResult.ok("Thanks for joining us!");
     }
@@ -62,14 +64,20 @@ public class LoginService {
      * @param info user login information
      * @return pass, token if verify successfully, otherwise error message
      */
+    @Transactional
     public GeneralResponse<String> login(Map<String, String> info) {
         // check token
         try {
             // get token
             String token = info.get("token");
             // verify token, if valid return pass else return error message
-            if (Auth.verify(token) != null) {
-                return HTTPResult.ok("pass");
+            Map<String, Object> payload = Auth.verify(token);
+            if (payload != null) {
+                // check if is a fake token
+                Long userId = (Long) payload.get("userId");
+                if (userRepository.existsById(userId)) {
+                    return HTTPResult.ok("pass");
+                }
             }
             return HTTPResult.fail("Please login again.");
         } catch (NullPointerException e) {
