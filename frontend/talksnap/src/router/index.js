@@ -49,17 +49,21 @@ const router = createRouter({
 // router guard
 router.beforeEach(async (to, from, next) => {
   if ((to.path !== "/login" && to.path !== "/signup" && to.path !== "/") && !store.getters.getAuth) {
-    next({ name: 'login' });
+    next('/login');
   }
   // auto login
   else if (to.path === "/login" && store.getters.getAuth && !store.getters.isLogin) {
     const result = await LoginProcess.loginWithToken();
     if (result) {
       store.commit('login');
-      next('/home');
+      next({ path: '/home', replace: true});
     } else {
-      next('/login');
+      next(false);
     }
+  }
+  // enforce user cannot go back to the login/signup page after login
+  else if (from.path === '/' && to.path === '/login' && store.getters.isLogin) {
+    next('/home');
   }
   else {
     next();

@@ -52,10 +52,7 @@ const LoginProcess = {
             // print successful msg
             MsgIndicator.success("Welcome back " + store.getters.getMyProfile.nickname +"!");
             // redirect to media home page
-            router.push("/home");
-        } else {
-            // redirect to login page
-            router.push("/login");
+            router.push({ path: '/home', replace: true});
         }
     },
 
