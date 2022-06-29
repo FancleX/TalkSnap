@@ -30,9 +30,6 @@ const FileProcessor = {
         MsgIndicator.error(res.data.message);
         return null;
       })
-      .catch(err => {
-        Notification.alert(err)
-      });
 
     if (result) {
       // store locally

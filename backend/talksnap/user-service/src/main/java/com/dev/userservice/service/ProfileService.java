@@ -2,6 +2,7 @@ package com.dev.userservice.service;
 
 import com.dev.auth.Auth;
 import com.dev.encryption.Encryption;
+import com.dev.exception.InvalidAuthException;
 import com.dev.response.GeneralResponse;
 import com.dev.response.HTTPResult;
 import com.dev.user.User;
@@ -41,7 +42,7 @@ public class ProfileService {
             userProfile.put("subscriptions", user.getSubscriptions());
             return HTTPResult.ok(userProfile);
         }
-        return HTTPResult.fail("Please login.");
+        throw new InvalidAuthException("Invalid or expired authorization.");
     }
 
     @Transactional
@@ -61,7 +62,7 @@ public class ProfileService {
             result.put("nickname", name);
             return HTTPResult.ok(result);
         }
-        return HTTPResult.fail("Please login.");
+        throw new InvalidAuthException("Invalid or expired authorization.");
     }
 
     @Transactional
@@ -77,7 +78,7 @@ public class ProfileService {
             result.put("email", email);
             return HTTPResult.ok(result);
         }
-        return HTTPResult.fail("Please login.");
+        throw new InvalidAuthException("Invalid or expired authorization.");
     }
 
     @Transactional
@@ -106,7 +107,7 @@ public class ProfileService {
             // if the old password is incorrect
             return HTTPResult.fail("The password is incorrect.");
         }
-        return HTTPResult.fail("Please login.");
+        throw new InvalidAuthException("Invalid or expired authorization.");
     }
 
     @Transactional
@@ -122,7 +123,7 @@ public class ProfileService {
             result.put("bio", bio);
             return HTTPResult.ok(result);
         }
-        return HTTPResult.fail("Please login.");
+        throw new InvalidAuthException("Invalid or expired authorization.");
     }
 
     public GeneralResponse<String> deleteAccount(String auth) {
@@ -134,7 +135,7 @@ public class ProfileService {
             userRepository.deleteById(id);
             return HTTPResult.ok("Your account has been deleted.");
         }
-        return HTTPResult.fail("Please login.");
+        throw new InvalidAuthException("Invalid or expired authorization.");
     }
 
     public GeneralResponse<List<Map<String, Object>>> searchUser(String auth, String username) {
@@ -147,7 +148,7 @@ public class ProfileService {
             List<Map<String, Object>> userList = userRepository.searchUser(id, username);
             return HTTPResult.ok(userList);
         }
-        return HTTPResult.fail("Please login.");
+        throw new InvalidAuthException("Invalid or expired authorization.");
     }
 
     public GeneralResponse<Map<String, Object>> fetchUserProfileById(String auth, Long id) {
@@ -158,7 +159,7 @@ public class ProfileService {
             Map<String, Object> userProfile = userRepository.fetchUserProfileById(id);
             return HTTPResult.ok(userProfile);
         }
-        return HTTPResult.fail("Please login.");
+        throw new InvalidAuthException("Invalid or expired authorization.");
     }
 
 }

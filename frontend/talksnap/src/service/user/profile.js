@@ -16,26 +16,14 @@ const ProfileFetcher = {
                     const profile = res.data.data;
                     // store the profile
                     store.commit("setMyProfile", profile);
-                } else {
-                    MsgIndicator.error(res.data.message);
                 }
             })
-            .catch(err => {
-                Notification.alert(err);
-            });
     },
 
     searchUser: async (input) => {
         const data = await axios.get("/user/profile/search/" + input)
             .then(res => {
-                if (res.data.code == 200) {
-                    return res.data.data;
-                }
-                MsgIndicator.error(res.data.message);
-                return null;
-            })
-            .catch(err => {
-                Notification.alert(err);
+                return res.data.code == 200 ? res.data.data : null;
             })
         return data;
     },
@@ -44,14 +32,7 @@ const ProfileFetcher = {
     fetchUserProfile: async (id) => {
         const profile = await axios.get("/user/profile/fetch/" + id)
             .then(res => {
-                if (res.data.code == 200) {
-                    return res.data.data;
-                }
-                MsgIndicator.error(res.data.message);
-                return null;
-            })
-            .catch(err => {
-                Notification.alert(err);
+                return res.data.code == 200 ? res.data.data : null;
             })
         return profile;
     }
@@ -64,15 +45,8 @@ const ProfileEditor = {
         if (nickname !== currentProfile.nickname) {
             const result = await axios.put('/user/profile/edit/name', { 'nickname': nickname })
                 .then(res => {
-                    if (res.data.code == 200) {
-                        return res.data.data;
-                    }
-                    MsgIndicator.error(res.data.message);
-                    return null;
+                    return res.data.code == 200 ? res.data.data : null;
                 })
-                .catch(err => {
-                    Notification.alert(err);
-                });
 
             if (result) {
                 // parse result
@@ -88,6 +62,7 @@ const ProfileEditor = {
             }
             return 0;
         }
+        return 1;
     },
 
     editEmail: async (email) => {
@@ -95,15 +70,8 @@ const ProfileEditor = {
         if (email !== currentProfile.email) {
             const result = await axios.put('/user/profile/edit/email', { 'email': email })
                 .then(res => {
-                    if (res.data.code == 200) {
-                        return res.data.data;
-                    }
-                    MsgIndicator.error(res.data.message);
-                    return null;
+                    return res.data.code == 200 ? res.data.data : null;
                 })
-                .catch(err => {
-                    Notification.alert(err);
-                });
 
             if (result) {
                 // parse result
@@ -118,6 +86,7 @@ const ProfileEditor = {
             }
             return 0;
         }
+        return 1;
     },
 
     editPassword: async (form) => {
@@ -133,9 +102,6 @@ const ProfileEditor = {
                 MsgIndicator.error(res.data.message);
                 return null;
             })
-            .catch(err => {
-                Notification.alert(err);
-            });
 
         if (result) {
             MsgIndicator.success("Edit completed");
@@ -152,15 +118,8 @@ const ProfileEditor = {
         if (bio !== currentProfile.bio) {
             const result = await axios.put('/user/profile/edit/bio', { 'bio': bio })
                 .then(res => {
-                    if (res.data.code == 200) {
-                        return res.data.data;
-                    }
-                    MsgIndicator.error(res.data.message);
-                    return null;
+                    return res.data.code == 200 ? res.data.data : null;
                 })
-                .catch(err => {
-                    Notification.alert(err);
-                });
 
             if (result) {
                 // parse result
@@ -181,12 +140,7 @@ const ProfileEditor = {
             .then(res => {
                 if (res.data.code == 200) {
                     MsgIndicator.success(res.data.data);
-                } else {
-                    MsgIndicator.error(res.data.message);
                 }
-            })
-            .catch(err => {
-                Notification.alert(err);
             })
     }
 

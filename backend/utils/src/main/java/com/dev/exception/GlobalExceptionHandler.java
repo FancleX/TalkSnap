@@ -1,32 +1,47 @@
 package com.dev.exception;
 
-import com.dev.response.GeneralResponse;
-import com.dev.response.HTTPResult;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MissingRequestHeaderException;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
+
 
 /**
  * Global exception handler.
  */
-@ControllerAdvice
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // global logger
-    private Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+    private static final Logger LOG = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
+    /**
+     * The application system exception
+     *
+     * @param e
+     */
     @ExceptionHandler(value = Exception.class)
-    public GeneralResponse<String> applicationException(Exception e) {
-        logger.info("Application exception: " + e.getMessage());
-        return HTTPResult.fail(e.getMessage());
+    public void applicationException(Exception e) {
+        LOG.error("Application exception: " + e.getMessage());
     }
 
-    @ExceptionHandler(value = BusinessException.class)
-    public GeneralResponse<String> businessException(BusinessException e) {
-        logger.info("Business exception: " + e.getMsg());
-        return HTTPResult.fail(e.getMsg());
+    /**
+     * 401 unauthorized exception
+     *
+     * @param e
+     * @return
+     */
+    @ExceptionHandler(value = { InvalidAuthException.class, MissingRequestHeaderException.class } )
+    @ResponseStatus(code = HttpStatus.UNAUTHORIZED)
+    public Map<String, String> invalidAuthException(Exception e) {
+        LOG.error(e.getClass().getName() + ": " + e.getMessage());
+        Map<String, String> res = new HashMap<>();
+        res.put("message", "Invalid or expired authorization.");
+        return res;
     }
 
 }

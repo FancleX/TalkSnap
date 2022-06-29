@@ -1,6 +1,7 @@
 import axios from "axios";
 import MsgIndicator from "../utils/msgIndicator";
 import router from '@/router'
+import store from '@/store'
 
 // global url 
 let protocol = window.location.protocol;
@@ -12,6 +13,8 @@ if (reg.test(host)) {
 } else {
     axios.defaults.baseURL = protocol + "//" + host + ":9003";
 }
+
+axios.defaults.timeout = 10000;
 
 // request interceptor
 axios.interceptors.request.use((config) => {
@@ -25,8 +28,6 @@ axios.interceptors.request.use((config) => {
     }
     return config;
 }, (error) => {
-    // redirect to home page
-    router.push("/");
     return Promise.reject(error);
 });
 
@@ -53,19 +54,17 @@ const errorHandle = (status, other) => {
             break;
         // Unauthorized
         case 401:
-            MsgIndicator.error("Unauthorized");
+            MsgIndicator.error(other);
             // clear invalid token
             store.dispatch("deleteToken");
             // redirect to login page
-            router.push("/login");
+            router.go(0);
             break;
         // Forbidden
         case 403:
             MsgIndicator.error("You don't have permission to access this site.");
-            // clear invalid token
-            store.dispatch("deleteToken");
             // redirect to home page
-            router.push("/");
+            router.push("/home");
             break;
         // redirect to 404 page  
         case 404:

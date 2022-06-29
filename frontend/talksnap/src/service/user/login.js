@@ -25,9 +25,6 @@ const LoginProcess = {
                 MsgIndicator.error(res.data.message);
             }
         })
-        .catch(err => {
-            Notification.alert(err);
-        })
     },
 
     loginWithAccount: async(loginForm) => {
@@ -48,9 +45,6 @@ const LoginProcess = {
                 return 0;
             }
         })
-        .catch(err => {
-            Notification.alert(err);
-        });
 
         if (response) {
             // fetch the user profile
@@ -73,19 +67,8 @@ const LoginProcess = {
         })
         .then(res => {
             // check http code
-            if (res.data.code == 200) {
-                return 1;
-            } else {
-                // print error msg
-                MsgIndicator.error(res.data.message);
-                // omit the current token if has
-                store.dispatch('deleteToken');
-                return 0;
-            }
+            return res.data.code == 200 ? 1 : 0; 
         })
-        .catch(err => {
-            Notification.alert(err);
-        });
 
         if (status) {
             // fetch the user profile

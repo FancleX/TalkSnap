@@ -2,17 +2,16 @@ package com.dev.userservice.service;
 
 import com.dev.auth.Auth;
 import com.dev.encryption.Encryption;
+import com.dev.exception.InvalidAuthException;
 import com.dev.response.GeneralResponse;
 import com.dev.response.HTTPResult;
 import com.dev.user.User;
-import com.dev.userservice.controller.PictureController;
 import com.dev.userservice.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Map;
 
 @Service
@@ -70,7 +69,7 @@ public class LoginService {
         try {
             // get token
             String token = info.get("token");
-            // verify token, if valid return pass else return error message
+            // verify token, if valid return pass else return 401 message
             Map<String, Object> payload = Auth.verify(token);
             if (payload != null) {
                 // check if is a fake token
@@ -79,7 +78,7 @@ public class LoginService {
                     return HTTPResult.ok("pass");
                 }
             }
-            return HTTPResult.fail("Please login again.");
+            throw new InvalidAuthException("Invalid or expired authorization.");
         } catch (NullPointerException e) {
             // if the user doesn't own a token now
             // query email

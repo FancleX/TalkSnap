@@ -1,5 +1,7 @@
 server:
   port: 9004
+  error:
+    include-message: always
 spring:
   application:
     name: user-service

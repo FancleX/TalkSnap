@@ -1,6 +1,7 @@
 package com.dev.userservice.service;
 
 import com.dev.auth.Auth;
+import com.dev.exception.InvalidAuthException;
 import com.dev.response.GeneralResponse;
 import com.dev.response.HTTPResult;
 import com.dev.user.User;
@@ -53,7 +54,7 @@ public class PictureService {
                 return HTTPResult.fail("Cannot upload the image, please try again.");
             }
         }
-        return HTTPResult.fail("Please login first.");
+        throw new InvalidAuthException("Invalid or expired authorization.");
     }
 
 }
