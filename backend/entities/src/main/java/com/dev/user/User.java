@@ -46,7 +46,7 @@ public class User implements Serializable {
     private byte[] backgroundImg;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "subscriptions")
+    @JoinColumn(name = "userId")
     private Set<Subscription> subscriptions;
 }
 

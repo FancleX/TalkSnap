@@ -5,6 +5,7 @@ import com.dev.encryption.Encryption;
 import com.dev.exception.InvalidAuthException;
 import com.dev.response.GeneralResponse;
 import com.dev.response.HTTPResult;
+import com.dev.user.Subscription;
 import com.dev.user.User;
 import com.dev.userservice.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Service
 public class ProfileService {
@@ -121,6 +123,42 @@ public class ProfileService {
             userRepository.updateBio(bio, id);
             Map<String, String> result = new HashMap<>();
             result.put("bio", bio);
+            return HTTPResult.ok(result);
+        }
+        throw new InvalidAuthException("Invalid or expired authorization.");
+    }
+
+    @Transactional
+    public GeneralResponse<Map<String, Set<Subscription>>> subscribe(String auth, Map<String, String> data) {
+        // verify the token
+        Map<String, Object> payload = Auth.verify(auth);
+        if (payload != null) {
+            // get user id
+            Long id = (Long) payload.get("userId");
+            // get user data
+            User user = userRepository.findById(id).get();
+            // get subscription set
+            Set<Subscription> subscriptions = user.getSubscriptions();
+            // parse input data
+            Long userId = Long.valueOf(data.get("userId"));
+            String nickname = data.get("nickname");
+            // create a new subscription object
+            Subscription newSubscription = new Subscription(userId, nickname);
+            // query the new subscription in the set
+            // determine if the set has the subscription
+            boolean anyMatch = subscriptions.stream().anyMatch(s -> s.equals(newSubscription));
+            if (subscriptions.isEmpty() || !anyMatch) {
+                // if the set is empty add the new subscription
+                subscriptions.add(newSubscription);
+            } else {
+                // remove the subscription
+                subscriptions.remove(newSubscription);
+            }
+            // save the modification
+            userRepository.save(user);
+            // return the updated set
+            Map<String, Set<Subscription>> result = new HashMap<>();
+            result.put("subscriptions", subscriptions);
             return HTTPResult.ok(result);
         }
         throw new InvalidAuthException("Invalid or expired authorization.");

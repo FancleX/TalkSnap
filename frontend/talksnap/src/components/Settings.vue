@@ -66,7 +66,6 @@
       />
     </el-form-item>
     <el-form-item class="btn">
-      <!-- <el-space :size="30" spacer="|" alignment> -->
         <el-container style="margin:auto; justify-content: space-evenly;">
           <el-switch
           v-model="logout"
@@ -87,8 +86,6 @@
           </template>
         </el-popconfirm>
         </el-container>
-        
-      <!-- </el-space> -->
     </el-form-item>
   </el-form>
 </template>

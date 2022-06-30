@@ -28,10 +28,15 @@
             <el-menu-item index="1-4-1">item one</el-menu-item>
           </el-sub-menu>
         </el-sub-menu>
-        <el-menu-item index="2">
-          <el-icon><Notebook /></el-icon>
-          <span>Contacts</span>
-        </el-menu-item>
+        <el-sub-menu index="2">
+          <template #title>
+            <el-icon><Notebook /></el-icon>
+            <span>Contacts</span>
+          </template>
+          <el-menu-item :index="contactsIndex(index)" v-for="item, index in myInfo.subscriptions" :key="item">{{
+            item.friendName
+          }}</el-menu-item>
+        </el-sub-menu>
         <el-menu-item index="3">
           <el-icon><Connection /></el-icon>
           <span>Channels</span>
@@ -52,6 +57,16 @@
 <script>
 export default {
   name: "ProfileNav",
+  data() {
+    return {
+      myInfo: {},
+    };
+  },
+  watch: {
+    "$store.state.userProfile"() {
+      this.myInfo = this.$store.getters.getMyProfile;
+    },
+  },
   methods: {
     handleOpen(key, keyPath) {
       console.log(key, keyPath);
@@ -62,6 +77,9 @@ export default {
     handleClose(key, keyPath) {
       console.log(key, keyPath);
     },
+    contactsIndex(index) {
+      return "2-" + index;
+    }
   },
 };
 </script>

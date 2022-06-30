@@ -24,7 +24,7 @@
             </li>
           </ul>
           <div class="bottom">
-            <el-button circle class="button" type="warning"><el-icon><Star /></el-icon></el-button>
+            <el-button circle class="button" :type="subscribeBtnType" :title="subscribeTitle" @click="subscribe"><el-icon><Star /></el-icon></el-button>
           </div>
         </div>
       </el-card>
@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { ProfileFetcher } from "../service/user/profile";
+import { ProfileEditor, ProfileFetcher } from "../service/user/profile";
 import ProfileSk from "@/skeletons/ProfileSk.vue";
 import { computed } from "@vue/runtime-core";
 import { Star } from '@element-plus/icons-vue';
@@ -63,18 +63,35 @@ export default {
         bg_img: String,
         created_time: String
       },
+      params: {},
+      subscribeBtnType: 'success',
+      subscribeTitle: 'Subscribe'
     };
   },
   async mounted() {
     const params = decodeURIComponent(this.$route.params.user);
     // get id
-    const id = JSON.parse(params).id;
+    this.params = JSON.parse(params);
     // fetch intro of the user
     // {nickname: xxx, profile_img: xxx, email: xxx, bio: xxx, bg_img: xxx, created_time: xxx}
-    this.userInfo = await ProfileFetcher.fetchUserProfile(id);
+    this.userInfo = await ProfileFetcher.fetchUserProfile(this.params.id);
      
     this.dataReady = true;
   },
+  methods: {
+    async subscribe() {
+        const user = this.params;
+        const result = await ProfileEditor.subscribe(user);
+        if (result) {
+          // update button type
+          this.subscribeBtnType = 'warning';
+          this.subscribeTitle = 'Unsubscribe';
+        } else {
+          this.subscribeBtnType = 'success';
+          this.subscribeTitle = 'Subscribe';
+        }
+    }
+  }
 };
 </script>
 

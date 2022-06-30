@@ -1,12 +1,14 @@
 package com.dev.userservice.controller;
 
 import com.dev.response.GeneralResponse;
+import com.dev.user.Subscription;
 import com.dev.userservice.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/user/profile")
@@ -79,6 +81,19 @@ public class ProfileController {
     @PutMapping("edit/bio")
     public GeneralResponse<Map<String, String>> editBio(@RequestHeader("Authorization") String auth, @RequestBody Map<String, String> data) {
         return profileService.editBio(auth, data);
+    }
+
+    /**
+     * Handle user subscribe another user or unsubscribe a user
+     * if the user exists in the subscription set
+     *
+     * @param auth
+     * @param data { userId: xxx, nickname: xxx }
+     * @return updated subscription set
+     */
+    @PutMapping("subscribe")
+    public GeneralResponse<Map<String, Set<Subscription>>> subscribe(@RequestHeader("Authorization") String auth, @RequestBody Map<String, String> data) {
+        return profileService.subscribe(auth, data);
     }
 
     /**

@@ -1,5 +1,4 @@
 import axios from "axios";
-import Notification from "@/utils/notification";
 import store from "@/store";
 import MsgIndicator from "@/utils/msgIndicator";
 import router from "@/router";
@@ -142,6 +141,36 @@ const ProfileEditor = {
                     MsgIndicator.success(res.data.data);
                 }
             })
+    },
+
+    subscribe: async (user) => {
+        const { id, nickname } = user;
+        const result = await axios.put('/user/profile/subscribe', {
+            userId: id,
+            nickname: nickname
+        })
+        .then(res => {
+            return res.data.code == 200 ? res.data.data.subscriptions : null;
+        })
+        
+        // determine if subscribe or unsubscribe
+        // get profile from store
+        let profile = store.getters.getMyProfile;
+        const { subscriptions } = profile;
+        // finish code
+        let code;
+        // unsubscribe
+        if (result.length < subscriptions.length) {
+            MsgIndicator.warning("You unsubscribed " + nickname);
+            code = 0;
+        } else {
+            MsgIndicator.success("You subscribed " + nickname);
+            code = 1;
+        }
+        // update store
+        profile.subscriptions = result;
+        store.commit('setMyProfile', profile);
+        return code;
     }
 
 }
