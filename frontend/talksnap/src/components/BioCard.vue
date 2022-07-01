@@ -64,8 +64,8 @@ export default {
         created_time: String
       },
       params: {},
-      subscribeBtnType: 'success',
-      subscribeTitle: 'Subscribe'
+      subscribeBtnType: computed(() => { return ProfileEditor.analyzer(this.params.id, this.$store.getters.getMyProfile.subscriptions_values) ? 'danger' : 'warning' }),
+      subscribeTitle: computed(() => { return this.subscribeBtnType === 'danger' ? 'Unsubcribe' : 'Subscribe' }),
     };
   },
   async mounted() {
@@ -81,15 +81,7 @@ export default {
   methods: {
     async subscribe() {
         const user = this.params;
-        const result = await ProfileEditor.subscribe(user);
-        if (result) {
-          // update button type
-          this.subscribeBtnType = 'warning';
-          this.subscribeTitle = 'Unsubscribe';
-        } else {
-          this.subscribeBtnType = 'success';
-          this.subscribeTitle = 'Subscribe';
-        }
+        await ProfileEditor.subscribe(user);
     }
   }
 };

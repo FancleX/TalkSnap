@@ -164,23 +164,40 @@ const ProfileEditor = {
         // determine if subscribe or unsubscribe
         // get profile from store
         let profile = store.getters.getMyProfile;
-        const { subscriptions } = profile;
-        // finish code
-        let code;
         // unsubscribe
-        if (result.length < subscriptions.length) {
+        if (!ProfileEditor.analyzer(id, Object.values(result))) {
             MsgIndicator.warning("You unsubscribed " + nickname);
-            code = 0;
         } else {
             MsgIndicator.success("You subscribed " + nickname);
-            code = 1;
         }
         // update store
         profile.subscriptions = result;
         profile.subscriptions_keys = Object.keys(result);
         profile.subscriptions_values = Object.values(result);
         store.commit('setMyProfile', profile);
-        return code;
+    },
+
+    /**
+     * Determine if the user does exits in the new value set
+     * return true if it's, otherwise false
+     * 
+     * @param {the userId} userId 
+     * @param {the new subscription values set} newSet 
+     */
+    analyzer: (userId, newSet) => {
+        let result = false;
+        for (let obj of newSet) {
+            let isDone = false;
+            for (let element of obj) {
+                if (userId == element.friendId) {
+                    result = true;
+                    isDone = true;
+                    break;  
+                }
+            }
+            if (isDone) break;
+        }
+        return result;
     }
 
 }
