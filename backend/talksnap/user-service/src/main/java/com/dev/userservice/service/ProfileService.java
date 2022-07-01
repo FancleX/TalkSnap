@@ -40,9 +40,9 @@ public class ProfileService {
             userProfile.put("bio", user.getBio());
             userProfile.put("bg_img", user.getBackgroundImg());
             Map<String, Set<Subscription>> data = groupByAlphabet(user.getSubscriptions());
-            List<Map<String, Set<Subscription>>> list = new ArrayList<>();
-            list.add(data);
-            userProfile.put("subscriptions", list);
+//            List<Map<String, Set<Subscription>>> list = new ArrayList<>();
+//            list.add(data);
+            userProfile.put("subscriptions", data);
             return HTTPResult.ok(userProfile);
         }
         throw new InvalidAuthException("Invalid or expired authorization.");
@@ -130,7 +130,7 @@ public class ProfileService {
     }
 
     @Transactional
-    public GeneralResponse<Map<String, Set<Map<String, Set<Subscription>>>>> subscribe(String auth, Map<String, String> data) {
+    public GeneralResponse<Map<String, Map<String, Set<Subscription>>>> subscribe(String auth, Map<String, String> data) {
         // verify the token
         Map<String, Object> payload = Auth.verify(auth);
         if (payload != null) {
@@ -160,11 +160,11 @@ public class ProfileService {
             // grouping the set by the first alphabet letter
             Map<String, Set<Subscription>> classifiedSet = groupByAlphabet(subscriptions);
             // wrap by a list
-            Set<Map<String, Set<Subscription>>> set = new HashSet<>();
-            set.add(classifiedSet);
+//            Set<Map<String, Set<Subscription>>> set = new HashSet<>();
+//            set.add(classifiedSet);
             // return the updated set
-            Map<String, Set<Map<String, Set<Subscription>>>> result = new HashMap<>();
-            result.put("subscriptions", set);
+            Map<String, Map<String, Set<Subscription>>> result = new HashMap<>();
+            result.put("subscriptions", classifiedSet);
             return HTTPResult.ok(result);
         }
         throw new InvalidAuthException("Invalid or expired authorization.");
@@ -175,15 +175,16 @@ public class ProfileService {
      * This method should only work on the copy of the set in order to avoid transaction to modify the entity in database.
      *
      * @param subscriptions the subscription set
-     * @return a new map "an alphabet letter": {the set confirmed of the case of the key}
+     * @return a new map "an alphabet letter": {the set confirmed of the case of the key} or empty map
      */
     private Map<String, Set<Subscription>> groupByAlphabet(Set<Subscription> subscriptions) {
         // copy the subscription list
         Set<Subscription> subscriptionsCopy = new HashSet<>(Set.copyOf(subscriptions));
+        // keep insertion order
+        Map<String, Set<Subscription>> map = new LinkedHashMap<>();
         if (!subscriptions.isEmpty()) {
             // define keys
             String key = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            Map<String, Set<Subscription>> map = new HashMap<>();
             key.chars().forEach(c -> {
                 // collect the entities that start with the alphabet letter
                 Set<Subscription> set = subscriptions.stream().filter(e -> e.getFriendName().toUpperCase().charAt(0) == (char) c).collect(Collectors.toSet());
@@ -199,9 +200,8 @@ public class ProfileService {
             if (!subscriptionsCopy.isEmpty()) {
                 map.put("#", subscriptionsCopy);
             }
-            return map;
         }
-        return null;
+        return map;
     }
 
 

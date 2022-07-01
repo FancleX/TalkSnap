@@ -33,9 +33,6 @@
             <el-icon><Notebook /></el-icon>
             <span>Contacts</span>
           </template>
-          <!-- <el-menu-item :index="contactsIndex(index)" v-for="item, index in myInfo.subscriptions" :key="item">{{
-            item.friendName
-          }}</el-menu-item> -->
           <el-menu-item-group :title="myInfo.subscriptions_keys[index]" v-for="item, index in myInfo.subscriptions_values" :key="item">
             <el-menu-item :index="contactsIndex(index)" v-for="data in item" :key="data">{{ data.friendName }}</el-menu-item>
           </el-menu-item-group>

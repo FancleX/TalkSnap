@@ -6,7 +6,6 @@ import router from "@/router";
 const ProfileFetcher = {
 
     // fetch with token
-    // fetch with token
     fetchMyProfile: async () => {
         let profile = await axios.get("/user/profile/fetchUser")
             .then(res => {
@@ -14,12 +13,16 @@ const ProfileFetcher = {
             })
 
             if (profile) {
-                const keys = Object.keys(profile.subscriptions[0]);
-                const values = Object.values(profile.subscriptions[0]);
-                profile.subscriptions_keys = keys;
-                profile.subscriptions_values = values;
+                if (profile.subscriptions) {
+                    // parse the subscriptions
+                    const keys = Object.keys(profile.subscriptions);
+                    const values = Object.values(profile.subscriptions);
+                    profile.subscriptions_keys = keys;
+                    profile.subscriptions_values = values;
+                }
                 // store the profile
                 store.commit("setMyProfile", profile);
+                console.log(profile)
             }
             
     },
@@ -155,7 +158,7 @@ const ProfileEditor = {
             nickname: nickname
         })
         .then(res => {
-            return res.data.code == 200 ? res.data.data.subscriptions : null;
+            return res.data.code == 200 ? res.data.data.subscriptions : {};
         })
         
         // determine if subscribe or unsubscribe
@@ -173,10 +176,10 @@ const ProfileEditor = {
             code = 1;
         }
         // update store
-        profile.subscriptions.data = result[0];
-        profile.subscriptions.keys = Object.keys(result[0]);
+        profile.subscriptions = result;
+        profile.subscriptions_keys = Object.keys(result);
+        profile.subscriptions_values = Object.values(result);
         store.commit('setMyProfile', profile);
-        console.log(profile)
         return code;
     }
 
