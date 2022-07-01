@@ -92,7 +92,7 @@ public class ProfileController {
      * @return updated subscription set
      */
     @PutMapping("subscribe")
-    public GeneralResponse<Map<String, Set<Subscription>>> subscribe(@RequestHeader("Authorization") String auth, @RequestBody Map<String, String> data) {
+    public GeneralResponse<Map<String, Set<Map<String, Set<Subscription>>>>> subscribe(@RequestHeader("Authorization") String auth, @RequestBody Map<String, String> data) {
         return profileService.subscribe(auth, data);
     }
 

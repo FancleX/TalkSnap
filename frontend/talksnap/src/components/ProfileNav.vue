@@ -1,5 +1,5 @@
 <template>
-  <el-row class="tac" style="max-height: 500px">
+  <el-row class="tac" style="max-height: 500px" v-if="isDataReady">
     <el-col>
       <el-menu
         active-text-color="#39C5BB"
@@ -33,9 +33,12 @@
             <el-icon><Notebook /></el-icon>
             <span>Contacts</span>
           </template>
-          <el-menu-item :index="contactsIndex(index)" v-for="item, index in myInfo.subscriptions" :key="item">{{
+          <!-- <el-menu-item :index="contactsIndex(index)" v-for="item, index in myInfo.subscriptions" :key="item">{{
             item.friendName
-          }}</el-menu-item>
+          }}</el-menu-item> -->
+          <el-menu-item-group :title="myInfo.subscriptions_keys[index]" v-for="item, index in myInfo.subscriptions_values" :key="item">
+            <el-menu-item :index="contactsIndex(index)" v-for="data in item" :key="data">{{ data.friendName }}</el-menu-item>
+          </el-menu-item-group>
         </el-sub-menu>
         <el-menu-item index="3">
           <el-icon><Connection /></el-icon>
@@ -52,19 +55,37 @@
       </el-menu>
     </el-col>
   </el-row>
+  <ProfileStructure v-else />
 </template>
 
 <script>
+import ProfileStructure from '@/skeletons/ProfileStructure.vue';
+
 export default {
   name: "ProfileNav",
+  components: { ProfileStructure },
   data() {
     return {
       myInfo: {},
+      isDataReady: true
     };
+  },
+  mounted() {
+    this.myInfo = this.$store.getters.getMyProfile;
+    if (!this.myInfo) {
+      this.isDataReady = false;
+    } else {
+      this.isDataReady = true;
+    }
   },
   watch: {
     "$store.state.userProfile"() {
-      this.myInfo = this.$store.getters.getMyProfile;
+      if (!this.$store.getters.getMyProfile) {
+        this.isDataReady = false;
+      } else {
+        this.myInfo = this.$store.getters.getMyProfile;
+        this.isDataReady = true;
+      }
     },
   },
   methods: {

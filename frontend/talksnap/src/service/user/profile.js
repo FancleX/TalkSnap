@@ -8,15 +8,20 @@ const ProfileFetcher = {
     // fetch with token
     // fetch with token
     fetchMyProfile: async () => {
-        await axios.get("/user/profile/fetchUser")
+        let profile = await axios.get("/user/profile/fetchUser")
             .then(res => {
-                if (res.data.code == 200) {
-                    // create a user profile
-                    const profile = res.data.data;
-                    // store the profile
-                    store.commit("setMyProfile", profile);
-                }
+                return res.data.code == 200 ? res.data.data : null;
             })
+
+            if (profile) {
+                const keys = Object.keys(profile.subscriptions[0]);
+                const values = Object.values(profile.subscriptions[0]);
+                profile.subscriptions_keys = keys;
+                profile.subscriptions_values = values;
+                // store the profile
+                store.commit("setMyProfile", profile);
+            }
+            
     },
 
     searchUser: async (input) => {
@@ -168,8 +173,10 @@ const ProfileEditor = {
             code = 1;
         }
         // update store
-        profile.subscriptions = result;
+        profile.subscriptions.data = result[0];
+        profile.subscriptions.keys = Object.keys(result[0]);
         store.commit('setMyProfile', profile);
+        console.log(profile)
         return code;
     }
 

@@ -21,13 +21,13 @@ export default {
     Navbar,
     Footer,
   },
-  created() {
+  async created() {
     // has token don't have profile
     if (localStorage.token) {
       this.$store.commit("setToken", localStorage.token);
       if (sessionStorage.isLogin) {
         this.$store.commit("login");
-        ProfileFetcher.fetchMyProfile();
+        await ProfileFetcher.fetchMyProfile();
       }
     }
 

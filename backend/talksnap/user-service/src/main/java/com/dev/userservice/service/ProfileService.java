@@ -12,10 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ProfileService {
@@ -41,7 +39,10 @@ public class ProfileService {
             userProfile.put("profile_img", user.getProfileImg());
             userProfile.put("bio", user.getBio());
             userProfile.put("bg_img", user.getBackgroundImg());
-            userProfile.put("subscriptions", user.getSubscriptions());
+            Map<String, Set<Subscription>> data = groupByAlphabet(user.getSubscriptions());
+            List<Map<String, Set<Subscription>>> list = new ArrayList<>();
+            list.add(data);
+            userProfile.put("subscriptions", list);
             return HTTPResult.ok(userProfile);
         }
         throw new InvalidAuthException("Invalid or expired authorization.");
@@ -129,7 +130,7 @@ public class ProfileService {
     }
 
     @Transactional
-    public GeneralResponse<Map<String, Set<Subscription>>> subscribe(String auth, Map<String, String> data) {
+    public GeneralResponse<Map<String, Set<Map<String, Set<Subscription>>>>> subscribe(String auth, Map<String, String> data) {
         // verify the token
         Map<String, Object> payload = Auth.verify(auth);
         if (payload != null) {
@@ -156,13 +157,53 @@ public class ProfileService {
             }
             // save the modification
             userRepository.save(user);
+            // grouping the set by the first alphabet letter
+            Map<String, Set<Subscription>> classifiedSet = groupByAlphabet(subscriptions);
+            // wrap by a list
+            Set<Map<String, Set<Subscription>>> set = new HashSet<>();
+            set.add(classifiedSet);
             // return the updated set
-            Map<String, Set<Subscription>> result = new HashMap<>();
-            result.put("subscriptions", subscriptions);
+            Map<String, Set<Map<String, Set<Subscription>>>> result = new HashMap<>();
+            result.put("subscriptions", set);
             return HTTPResult.ok(result);
         }
         throw new InvalidAuthException("Invalid or expired authorization.");
     }
+
+    /**
+     * Format the output set with grouping by the alphabet of the entities.
+     * This method should only work on the copy of the set in order to avoid transaction to modify the entity in database.
+     *
+     * @param subscriptions the subscription set
+     * @return a new map "an alphabet letter": {the set confirmed of the case of the key}
+     */
+    private Map<String, Set<Subscription>> groupByAlphabet(Set<Subscription> subscriptions) {
+        // copy the subscription list
+        Set<Subscription> subscriptionsCopy = new HashSet<>(Set.copyOf(subscriptions));
+        if (!subscriptions.isEmpty()) {
+            // define keys
+            String key = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            Map<String, Set<Subscription>> map = new HashMap<>();
+            key.chars().forEach(c -> {
+                // collect the entities that start with the alphabet letter
+                Set<Subscription> set = subscriptions.stream().filter(e -> e.getFriendName().toUpperCase().charAt(0) == (char) c).collect(Collectors.toSet());
+                if (!set.isEmpty()) {
+                    // put the in the map
+                    map.put(String.valueOf((char) c), set);
+                    // remove the set to reduce replicated traversals
+                    subscriptionsCopy.removeAll(set);
+                }
+            });
+            // if the entities don't start with a valid alphabet letter
+            // group them by # sign
+            if (!subscriptionsCopy.isEmpty()) {
+                map.put("#", subscriptionsCopy);
+            }
+            return map;
+        }
+        return null;
+    }
+
 
     public GeneralResponse<String> deleteAccount(String auth) {
         // verify the token
