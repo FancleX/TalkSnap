@@ -10,8 +10,8 @@ import org.springframework.context.annotation.Import;
 
 @SpringBootApplication
 @EnableEurekaClient
-@EntityScan(basePackages = "com.dev.user")
 @Import(GlobalExceptionHandler.class)
+@EntityScan(basePackages = "com.dev.user")
 public class UserServiceApplication {
 
     public static void main(String[] args) {

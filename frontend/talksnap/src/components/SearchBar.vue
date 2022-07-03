@@ -1,7 +1,7 @@
 <template>
   <div class="searchbar"> 
     <el-form :model="basicInfo" size="default" label-width="100px">
-      <el-form-item prop="startDate" style="width: 100%; margin: auto">
+      <el-form-item style="width: 100%; margin: auto">
         <el-autocomplete
           prefix-icon="Search"
           v-model.trim="basicInfo.selectValue"

@@ -1,7 +1,6 @@
 package com.dev.userservice.controller;
 
 import com.dev.response.GeneralResponse;
-import com.dev.user.User;
 import com.dev.userservice.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

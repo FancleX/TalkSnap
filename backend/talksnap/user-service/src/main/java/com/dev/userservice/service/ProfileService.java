@@ -40,8 +40,6 @@ public class ProfileService {
             userProfile.put("bio", user.getBio());
             userProfile.put("bg_img", user.getBackgroundImg());
             Map<String, Set<Subscription>> data = groupByAlphabet(user.getSubscriptions());
-//            List<Map<String, Set<Subscription>>> list = new ArrayList<>();
-//            list.add(data);
             userProfile.put("subscriptions", data);
             return HTTPResult.ok(userProfile);
         }
@@ -159,9 +157,6 @@ public class ProfileService {
             userRepository.save(user);
             // grouping the set by the first alphabet letter
             Map<String, Set<Subscription>> classifiedSet = groupByAlphabet(subscriptions);
-            // wrap by a list
-//            Set<Map<String, Set<Subscription>>> set = new HashSet<>();
-//            set.add(classifiedSet);
             // return the updated set
             Map<String, Map<String, Set<Subscription>>> result = new HashMap<>();
             result.put("subscriptions", classifiedSet);
@@ -178,11 +173,11 @@ public class ProfileService {
      * @return a new map "an alphabet letter": {the set confirmed of the case of the key} or empty map
      */
     private Map<String, Set<Subscription>> groupByAlphabet(Set<Subscription> subscriptions) {
-        // copy the subscription list
-        Set<Subscription> subscriptionsCopy = new HashSet<>(Set.copyOf(subscriptions));
         // keep insertion order
         Map<String, Set<Subscription>> map = new LinkedHashMap<>();
         if (!subscriptions.isEmpty()) {
+            // copy the subscription list
+            Set<Subscription> subscriptionsCopy = new HashSet<>(Set.copyOf(subscriptions));
             // define keys
             String key = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
             key.chars().forEach(c -> {

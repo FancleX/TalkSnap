@@ -22,7 +22,6 @@ const ProfileFetcher = {
                 }
                 // store the profile
                 store.commit("setMyProfile", profile);
-                console.log(profile)
             }
             
     },
