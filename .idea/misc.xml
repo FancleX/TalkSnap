@@ -9,6 +9,7 @@
         <option value="$PROJECT_DIR$/backend/talksnap/eureka-server/pom.xml" />
         <option value="$PROJECT_DIR$/backend/talksnap/user-service/pom.xml" />
         <option value="$PROJECT_DIR$/backend/talksnap/gateway-server/pom.xml" />
+        <option value="$PROJECT_DIR$/backend/talksnap/chat-service/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">
