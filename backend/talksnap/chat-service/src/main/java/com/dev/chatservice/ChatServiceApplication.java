@@ -7,7 +7,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
-@SpringBootApplication(scanBasePackages = "com.dev.chat", exclude = DataSourceAutoConfiguration.class)
+@SpringBootApplication(scanBasePackages = "com.dev.chat")
 public class ChatServiceApplication implements CommandLineRunner {
 
     @Value("${server.port}")

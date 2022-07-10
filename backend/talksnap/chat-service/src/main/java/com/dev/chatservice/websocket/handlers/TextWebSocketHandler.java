@@ -3,7 +3,6 @@ package com.dev.chatservice.websocket.handlers;
 import com.dev.auth.Auth;
 import com.dev.chat.Message;
 import com.google.gson.Gson;
-import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
