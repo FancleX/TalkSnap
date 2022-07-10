@@ -1,20 +1,18 @@
 package com.dev.chat;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.nio.channels.Channel;
+import io.netty.channel.Channel;
 import java.util.Objects;
 
 @Data
+@AllArgsConstructor
 public class WebSocketChannel {
 
     private Long uuid;
-    private Channel channel;
 
-    public WebSocketChannel(Long uuid, Channel channel) {
-        this.uuid = uuid;
-        this.channel = channel;
-    }
+    private Channel channel;
 
     @Override
     public boolean equals(Object o) {

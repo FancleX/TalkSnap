@@ -2,18 +2,23 @@ package com.dev.chatservice.websocket.handlers;
 
 import com.dev.auth.Auth;
 import com.dev.chat.Message;
+import com.dev.chatservice.websocket.messageQueue.RabbitMQ;
 import com.google.gson.Gson;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
 import java.util.Map;
 
 @Slf4j
 public class TextWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {
 
+    // Json parser
     private final Gson JSON = new Gson();
+
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame msg) throws Exception {

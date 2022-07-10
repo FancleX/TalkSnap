@@ -62,5 +62,25 @@ public class WebSocketChannelPool {
         }
     }
 
+    /**
+     * return if the server has the channel of the id
+     *
+     * @param id user id
+     * @return true if it has, otherwise false
+     */
+    public static boolean isContain(Long id) {
+        return pool.containsKey(id);
+    }
+
+    /**
+     * get channels of the id, call after isContain
+     *
+     * @param id user id
+     * @return channels
+     */
+    public static Set<WebSocketChannel> getChannels(Long id) {
+        return pool.get(id);
+    }
+
 
 }
