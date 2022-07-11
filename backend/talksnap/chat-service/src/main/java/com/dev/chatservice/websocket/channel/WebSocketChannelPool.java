@@ -2,8 +2,9 @@ package com.dev.chatservice.websocket.channel;
 
 import com.dev.chat.WebSocketChannel;
 import com.dev.exception.DuplicatedChannelException;
+import io.netty.channel.Channel;
 
-import java.nio.channels.Channel;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -57,6 +58,7 @@ public class WebSocketChannelPool {
         }
         // check the entry
         assert entry != null;
+        // remove if no channel bind with the user
         if (entry.getValue().isEmpty()) {
             pool.remove(entry.getKey());
         }

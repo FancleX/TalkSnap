@@ -7,20 +7,16 @@ import com.dev.chatservice.websocket.channel.WebSocketChannelPool;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
 
-import java.nio.channels.Channel;
 import java.util.Set;
 
 
 @Component
 public class RabbitMQ {
 
-    private final RabbitTemplate rabbitTemplate;
+    private static final RabbitTemplate rabbitTemplate = new RabbitTemplate();
 
-    public RabbitMQ(RabbitTemplate rabbitTemplate) {
-        this.rabbitTemplate = rabbitTemplate;
-    }
 
-    public void sendMessage(MQObject message) {
+    public static void sendMessage(MQObject message) {
         rabbitTemplate.convertAndSend(MQConfig.TOPIC_EXCHANGE_NAME, "ws-exchange", message);
     }
 
