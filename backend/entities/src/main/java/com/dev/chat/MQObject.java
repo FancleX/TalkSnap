@@ -14,7 +14,11 @@ public class MQObject implements Serializable {
     @Serial
     private static final long serialVersionUID = 123456L;
 
-    private String from;
+    private Long uuid;
+
+    private Long fromId;
+
+    private String fromName;
 
     private Long to;
 

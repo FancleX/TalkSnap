@@ -15,7 +15,7 @@ public abstract class GeneralHandlerImp implements GeneralHandler {
         // get receiver
         Long to = object.getTo();
         // if the receiver doesn't exist locally
-        if (!WebSocketChannelPool.isContain(to)) {
+        if (!WebSocketChannelPool.isContain(to, object.getUuid())) {
             return false;
         }
         // deliver the object

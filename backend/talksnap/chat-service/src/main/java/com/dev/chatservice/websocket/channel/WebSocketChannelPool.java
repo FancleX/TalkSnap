@@ -70,9 +70,9 @@ public class WebSocketChannelPool {
      * @param id user id
      * @return true if it has, otherwise false
      */
-    public static boolean isContain(Long id) {
-        return pool.containsKey(id);
-    }
+//    public static boolean isContain(Long id) {
+//        return pool.containsKey(id);
+//    }
 
     /**
      * get channels of the id, call after isContain
@@ -84,5 +84,19 @@ public class WebSocketChannelPool {
         return pool.get(id);
     }
 
+    /**
+     * Determine if the server has the user and its specific channel
+     *
+     * @param id the user id
+     * @param uuid the user channel id
+     * @return true if meet requirements
+     */
+    public static boolean isContain(Long id, Long uuid) {
+        Set<WebSocketChannel> webSocketChannels = pool.get(id);
+        if (webSocketChannels.isEmpty()) {
+            return false;
+        }
+        return webSocketChannels.stream().anyMatch(c -> c.getUuid().equals(uuid));
+    }
 
 }

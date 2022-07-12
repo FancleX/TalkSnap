@@ -7,7 +7,6 @@ import com.dev.chat.MessageType;
 import com.dev.chat.WebSocketChannel;
 import com.dev.chatservice.websocket.channel.WebSocketChannelPool;
 import com.dev.chatservice.websocket.handlers.subHandlers.GeneralHandler;
-import com.dev.chatservice.websocket.handlers.subHandlers.HeartBeatHandler;
 import com.dev.chatservice.websocket.handlers.subHandlers.TextHandler;
 import com.google.gson.Gson;
 import com.google.gson.stream.MalformedJsonException;
@@ -17,6 +16,7 @@ import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import lombok.extern.slf4j.Slf4j;
 
 
+import java.util.Date;
 import java.util.Map;
 
 @Slf4j
@@ -25,9 +25,6 @@ public class TextWebSocketHandler extends SimpleChannelInboundHandler<TextWebSoc
     // Json parser
     private final Gson JSON = new Gson();
     private final GeneralHandler textHandler = new TextHandler();
-    private final HeartBeatHandler heartBeatHandler = new HeartBeatHandler();
-
-
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame msg) throws Exception {
@@ -47,7 +44,7 @@ public class TextWebSocketHandler extends SimpleChannelInboundHandler<TextWebSoc
         String username = (String) auth.get("nickname");
         // handle the message by its type
         MessageType type = message.getType();
-        MQObject object = new MQObject(username, message.getTo(), message.getContent(), message.getTime(), message.getType());
+        MQObject object = new MQObject(message.getUuid(), userId, username, message.getTo(), message.getContent(), message.getTime(), message.getType());
         switch (type) {
             case LOGIN -> {
                 // added to the pool
@@ -55,22 +52,25 @@ public class TextWebSocketHandler extends SimpleChannelInboundHandler<TextWebSoc
                 WebSocketChannel channel = new WebSocketChannel(message.getUuid(), ctx.channel());
                 WebSocketChannelPool.bind(userId, channel);
             }
-            case TEXT -> {
+            case TEXT ->
                 // call text handler
                 textHandler.handle(object);
-            }
             case HEART_BEAT -> {
-                // call heart beat handler
+                MQObject res = new MQObject(message.getUuid(), null,"Server", object.getFromId(), "Pong", new Date(System.currentTimeMillis()), MessageType.HEART_BEAT);
+                ctx.channel().writeAndFlush(res);
+                // check if the channel exist or not
+                if (!WebSocketChannelPool.isContain(userId, message.getUuid())) {
+                    // the client lost connection due to the server crash and reconnected now
+                    WebSocketChannelPool.bind(userId, new WebSocketChannel(message.getUuid(), ctx.channel()));
+                }
             }
-            case MEDIA -> {
+            case MEDIA ->
                 // turn to binary handler
                 ctx.fireChannelRead(msg);
-            }
-            default -> {
+            default ->
                 // malformed request
                 // throw exception
                 throw new MalformedJsonException("Malformed request");
-            }
 
         }
     }

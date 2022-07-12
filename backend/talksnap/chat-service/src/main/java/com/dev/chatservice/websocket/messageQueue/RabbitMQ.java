@@ -24,7 +24,7 @@ public class RabbitMQ {
         // get the receiver id
         Long id = message.getTo();
         // query the receiver locally
-        if (WebSocketChannelPool.isContain(id)) {
+        if (WebSocketChannelPool.isContain(id, message.getUuid())) {
             // write the message to all channels of the id
             Set<WebSocketChannel> channels = WebSocketChannelPool.getChannels(id);
             channels.forEach(c -> {

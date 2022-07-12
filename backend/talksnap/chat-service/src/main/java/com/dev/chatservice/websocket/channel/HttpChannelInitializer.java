@@ -10,6 +10,9 @@ import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketServerCompressionHandler;
 import io.netty.handler.stream.ChunkedWriteHandler;
+import io.netty.handler.timeout.ReadTimeoutHandler;
+
+import java.util.concurrent.TimeUnit;
 
 public class HttpChannelInitializer extends ChannelInitializer<SocketChannel> {
     @Override
@@ -30,5 +33,7 @@ public class HttpChannelInitializer extends ChannelInitializer<SocketChannel> {
         pipeline.addLast(new TextWebSocketHandler());
         // binary handler
         pipeline.addLast(new BinaryWebSocketHandler());
+        // set timeout
+        pipeline.addLast(new ReadTimeoutHandler(10, TimeUnit.MINUTES));
     }
 }
