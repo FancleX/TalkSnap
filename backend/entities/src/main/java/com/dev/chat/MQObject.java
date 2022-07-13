@@ -14,6 +14,7 @@ public class MQObject implements Serializable {
     @Serial
     private static final long serialVersionUID = 123456L;
 
+    // client uuid
     private Long uuid;
 
     private Long fromId;

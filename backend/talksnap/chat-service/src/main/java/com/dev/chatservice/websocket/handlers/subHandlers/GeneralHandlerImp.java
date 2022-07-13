@@ -7,8 +7,7 @@ import com.dev.chatservice.websocket.messageQueue.RabbitMQ;
 
 import java.util.Set;
 
-public abstract class GeneralHandlerImp implements GeneralHandler {
-
+public class GeneralHandlerImp implements GeneralHandler {
 
     @Override
     public boolean deliver(MQObject object) {

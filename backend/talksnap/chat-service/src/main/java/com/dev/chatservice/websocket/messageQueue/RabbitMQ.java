@@ -27,9 +27,7 @@ public class RabbitMQ {
         if (WebSocketChannelPool.isContain(id, message.getUuid())) {
             // write the message to all channels of the id
             Set<WebSocketChannel> channels = WebSocketChannelPool.getChannels(id);
-            channels.forEach(c -> {
-                c.getChannel().writeAndFlush(message);
-            });
+            channels.forEach(c -> c.getChannel().writeAndFlush(message));
         }
     }
 }

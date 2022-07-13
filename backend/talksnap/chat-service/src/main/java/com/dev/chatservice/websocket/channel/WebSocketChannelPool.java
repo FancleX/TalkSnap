@@ -39,7 +39,7 @@ public class WebSocketChannelPool {
     }
 
     /**
-     * remove the channel when user is inactive
+     * remove the channel from the pool when user is inactive
      *
      * @param channel the channel to be removed
      */

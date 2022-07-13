@@ -7,9 +7,10 @@ import com.dev.chat.MessageType;
 import com.dev.chat.WebSocketChannel;
 import com.dev.chatservice.websocket.channel.WebSocketChannelPool;
 import com.dev.chatservice.websocket.handlers.subHandlers.GeneralHandler;
-import com.dev.chatservice.websocket.handlers.subHandlers.TextHandler;
+import com.dev.chatservice.websocket.handlers.subHandlers.GeneralHandlerImp;
 import com.google.gson.Gson;
 import com.google.gson.stream.MalformedJsonException;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
@@ -24,7 +25,7 @@ public class TextWebSocketHandler extends SimpleChannelInboundHandler<TextWebSoc
 
     // Json parser
     private final Gson JSON = new Gson();
-    private final GeneralHandler textHandler = new TextHandler();
+    private final GeneralHandler textHandler = new GeneralHandlerImp();
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame msg) throws Exception {
@@ -51,12 +52,16 @@ public class TextWebSocketHandler extends SimpleChannelInboundHandler<TextWebSoc
                 // create a channel for the connection
                 WebSocketChannel channel = new WebSocketChannel(message.getUuid(), ctx.channel());
                 WebSocketChannelPool.bind(userId, channel);
+                // sync the chat history
+
+
+
             }
             case TEXT ->
                 // call text handler
                 textHandler.handle(object);
             case HEART_BEAT -> {
-                MQObject res = new MQObject(message.getUuid(), null,"Server", object.getFromId(), "Pong", new Date(System.currentTimeMillis()), MessageType.HEART_BEAT);
+                MQObject res = new MQObject(message.getUuid(), -1L,"Server", object.getFromId(), "Pong", new Date(System.currentTimeMillis()), MessageType.HEART_BEAT);
                 ctx.channel().writeAndFlush(res);
                 // check if the channel exist or not
                 if (!WebSocketChannelPool.isContain(userId, message.getUuid())) {
@@ -71,7 +76,6 @@ public class TextWebSocketHandler extends SimpleChannelInboundHandler<TextWebSoc
                 // malformed request
                 // throw exception
                 throw new MalformedJsonException("Malformed request");
-
         }
     }
 
@@ -83,6 +87,11 @@ public class TextWebSocketHandler extends SimpleChannelInboundHandler<TextWebSoc
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        super.exceptionCaught(ctx, cause);
+        log.error(cause.getMessage());
+        // close the channel connection
+        Channel channel = ctx.channel();
+        // remove from the channel pool
+        WebSocketChannelPool.remove(channel);
+        channel.close();
     }
 }

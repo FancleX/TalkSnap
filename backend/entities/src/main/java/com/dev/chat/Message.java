@@ -1,12 +1,14 @@
 package com.dev.chat;
 
 import lombok.Data;
+import lombok.ToString;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
 @Data
+@ToString
 public class Message implements Serializable {
 
     @Serial
@@ -26,5 +28,7 @@ public class Message implements Serializable {
     private Date time;
     // total length
     private int length;
+    // file extension
+    private String fileExtension;
 
 }
