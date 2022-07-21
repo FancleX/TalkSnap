@@ -10,11 +10,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import javax.persistence.Id;
-import java.util.List;
+import java.util.HashMap;
+import java.util.PriorityQueue;
 
 @Document(collation = "chat_history")
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 public class ChatEntity {
 
@@ -28,6 +28,10 @@ public class ChatEntity {
     private String username;
 
     @DBRef
-    private List<MQObject> history;
+    private HashMap<Long, PriorityQueue<MQObject>> history;
 
+    public ChatEntity(Long userId, String username) {
+        this.userId = userId;
+        this.username = username;
+    }
 }

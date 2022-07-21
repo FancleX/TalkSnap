@@ -48,11 +48,11 @@ public class BinaryWebSocketHandler extends SimpleChannelInboundHandler<BinaryWe
         try (FileOutputStream fileOutputStream = new FileOutputStream(file))
         {
             fileOutputStream.write(bytes);
-            MQObject object = new MQObject(message.getUuid(), userId, username, message.getTo(), filePath, message.getTime(), MessageType.MEDIA);
+            MQObject object = new MQObject(message.getUuid(), userId, username, message.getTo(), filePath, message.getTime(), MessageType.MEDIA, false);
             binaryHandler.handle(object);
         } catch (IOException e) {
             log.error("File write failed of the incoming message: " + message);
-            ctx.channel().writeAndFlush(new MQObject(message.getUuid(), -1L, "Server", userId, "failed to send the file", message.getTime(), MessageType.MEDIA));
+            ctx.channel().writeAndFlush(new MQObject(message.getUuid(), -1L, "Server", userId, "failed to send the file", message.getTime(), MessageType.MEDIA, false));
         }
 
 

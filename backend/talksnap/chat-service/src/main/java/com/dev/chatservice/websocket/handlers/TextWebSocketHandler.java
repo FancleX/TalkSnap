@@ -45,14 +45,14 @@ public class TextWebSocketHandler extends SimpleChannelInboundHandler<TextWebSoc
         String username = (String) auth.get("nickname");
         // handle the message by its type
         MessageType type = message.getType();
-        MQObject object = new MQObject(message.getUuid(), userId, username, message.getTo(), message.getContent(), message.getTime(), message.getType());
+        MQObject object = new MQObject(message.getUuid(), userId, username, message.getTo(), message.getContent(), message.getTime(), message.getType(), false);
         switch (type) {
             case LOGIN -> {
                 // added to the pool
                 // create a channel for the connection
                 WebSocketChannel channel = new WebSocketChannel(message.getUuid(), ctx.channel());
                 WebSocketChannelPool.bind(userId, channel);
-                // sync the chat history
+                // db registry
 
 
 
@@ -61,7 +61,7 @@ public class TextWebSocketHandler extends SimpleChannelInboundHandler<TextWebSoc
                 // call text handler
                 textHandler.handle(object);
             case HEART_BEAT -> {
-                MQObject res = new MQObject(message.getUuid(), -1L,"Server", object.getFromId(), "Pong", new Date(System.currentTimeMillis()), MessageType.HEART_BEAT);
+                MQObject res = new MQObject(message.getUuid(), -1L,"Server", object.getFromId(), "Pong", new Date(System.currentTimeMillis()), MessageType.HEART_BEAT, false);
                 ctx.channel().writeAndFlush(res);
                 // check if the channel exist or not
                 if (!WebSocketChannelPool.isContain(userId, message.getUuid())) {
@@ -72,6 +72,17 @@ public class TextWebSocketHandler extends SimpleChannelInboundHandler<TextWebSoc
             case MEDIA ->
                 // turn to binary handler
                 ctx.fireChannelRead(msg);
+            // fetch history
+            case FETCH -> {
+                // get history
+
+
+
+            }
+            // trigger when the user read the message, change the state
+            case ACK_READ -> {
+
+            }
             default ->
                 // malformed request
                 // throw exception

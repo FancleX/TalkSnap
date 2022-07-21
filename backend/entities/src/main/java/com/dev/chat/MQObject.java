@@ -13,7 +13,6 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Data
-@AllArgsConstructor
 @Document
 public class MQObject implements Serializable {
 
@@ -44,4 +43,15 @@ public class MQObject implements Serializable {
     private MessageType type;
 
     private boolean isRead;
+
+    public MQObject(Long uuid, Long fromId, String fromName, Long to, Object content, Date time, MessageType type, boolean isRead) {
+        this.uuid = uuid;
+        this.fromId = fromId;
+        this.fromName = fromName;
+        this.to = to;
+        this.content = content;
+        this.time = time;
+        this.type = type;
+        this.isRead = isRead;
+    }
 }

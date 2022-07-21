@@ -6,9 +6,8 @@ import com.dev.chatservice.websocket.repository.ChatHistoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import javax.transaction.Transactional;
+import java.util.*;
 
 @Service
 public class ChatHistoryService {
@@ -20,12 +19,105 @@ public class ChatHistoryService {
         this.chatHistoryRepository = chatHistoryRepository;
     }
 
-    public List<MQObject> getHistoryById(Long userId) {
-        Optional<ChatEntity> chatEntity = chatHistoryRepository.findById(userId);
-        if (chatEntity.isPresent()) {
-            return chatEntity.get().getHistory();
+    /**
+     * invoke on registry
+     *
+     * @param userId
+     * @param username
+     */
+    @Transactional
+    public void createEntity(Long userId, String username) {
+        // determine if the user already get the chat entity from addHistory
+        Optional<ChatEntity> id = chatHistoryRepository.findById(userId);
+        if (id.isPresent()) {
+            // update the username
+            ChatEntity chatEntity = id.get();
+            chatEntity.setUsername(username);
+            chatHistoryRepository.save(chatEntity);
+        } else {
+            // if a new user
+            chatHistoryRepository.save(new ChatEntity(userId, username));
         }
-        return new ArrayList<>();
+    }
+
+
+    /**
+     * add a chat history to both sender and receiver
+     *
+     * @param object
+     */
+    @Transactional
+    public void addHistory(MQObject object) {
+        // add the message to both sender and receiver
+        Long from = object.getFromId();
+        Long to = object.getTo();
+
+        // update the sender history
+        ChatEntity fromEntity = chatHistoryRepository.findById(from).get();
+        // get history
+        HashMap<Long, PriorityQueue<MQObject>> map = fromEntity.getHistory();
+        // if the receiver is in history then add the object to that history, otherwise create a new list to add
+        PriorityQueue<MQObject> fromQueue = map.containsKey(to) ? map.get(to) : new PriorityQueue<>(Comparator.comparing(MQObject::getTime));
+        fromQueue.add(object);
+        // save the update
+        chatHistoryRepository.save(fromEntity);
+
+        // update the receiver history
+        Optional<ChatEntity> toId = chatHistoryRepository.findById(to);
+        // if the receiver doesn't have an entity yet
+        ChatEntity entity = toId.isEmpty() ? new ChatEntity(to, null) : toId.get();
+        HashMap<Long, PriorityQueue<MQObject>> history = entity.getHistory();
+        if (history == null) {
+            history = new HashMap<>();
+        }
+        PriorityQueue<MQObject> toQueue = map.containsKey(to) ? map.get(to) : new PriorityQueue<>(Comparator.comparing(MQObject::getTime));
+        toQueue.add(object);
+        history.put(from, toQueue);
+        chatHistoryRepository.save(entity);
+    }
+
+    /**
+     * return a chat history classified by different chat individual with time ascending order
+     * and count unread messages
+     *
+     * @param userId the user id
+     * @return all history will be like {queryId: [chatEntities of the id, the number of unread of the chat entities]}
+     */
+    public HashMap<Long, List<Object>> getHistoryById(Long userId) {
+        Optional<ChatEntity> chatEntity = chatHistoryRepository.findById(userId);
+        if (chatEntity.isEmpty()) {
+            return new HashMap<>();
+        }
+        HashMap<Long, List<Object>> res = new HashMap<>();
+        // count unread
+        HashMap<Long, PriorityQueue<MQObject>> history = chatEntity.get().getHistory();
+        history.forEach((key, value) -> {
+            int counts = 0;
+            List<Object> objects = new ArrayList<>();
+            // if the value is not null then count
+            if (!value.isEmpty()){
+                counts = value.stream().mapToInt(o -> o.isRead() ? 0 : 1).reduce(Integer::sum).getAsInt();
+            }
+            objects.add(value);
+            objects.add(counts);
+            res.put(key, objects);
+        });
+        return res;
+    }
+
+
+
+
+    /**
+     * return a specific history and classified by the target id
+     *
+     * @param userId the user id
+     * @param targetId the target that the user wants to query
+     * @return the history that happened associated with the target id
+     */
+    public PriorityQueue<MQObject> getHistoryById(Long userId, Long targetId) {
+        Optional<ChatEntity> chatEntity = chatHistoryRepository.findById(userId);
+        return chatEntity.isPresent() ? chatEntity.get().getHistory().get(targetId) : new PriorityQueue<>();
     }
 
 }
