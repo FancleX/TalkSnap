@@ -2,6 +2,7 @@ package com.dev.chatservice.websocket.channel;
 
 import com.dev.chatservice.websocket.handlers.BinaryWebSocketHandler;
 import com.dev.chatservice.websocket.handlers.TextWebSocketHandler;
+import com.dev.chatservice.websocket.service.ChatHistoryService;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;

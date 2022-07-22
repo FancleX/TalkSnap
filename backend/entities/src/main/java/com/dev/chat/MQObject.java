@@ -11,6 +11,7 @@ import javax.persistence.Transient;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 
 @Data
 @Document
@@ -53,5 +54,17 @@ public class MQObject implements Serializable {
         this.time = time;
         this.type = type;
         this.isRead = isRead;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof MQObject mqObject)) return false;
+        return id.equals(mqObject.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

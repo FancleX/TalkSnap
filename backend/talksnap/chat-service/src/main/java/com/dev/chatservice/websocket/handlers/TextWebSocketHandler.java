@@ -6,8 +6,10 @@ import com.dev.chat.Message;
 import com.dev.chat.MessageType;
 import com.dev.chat.WebSocketChannel;
 import com.dev.chatservice.websocket.channel.WebSocketChannelPool;
+import com.dev.chatservice.websocket.controller.ChatHistoryController;
 import com.dev.chatservice.websocket.handlers.subHandlers.GeneralHandler;
 import com.dev.chatservice.websocket.handlers.subHandlers.GeneralHandlerImp;
+import com.dev.chatservice.websocket.service.ChatHistoryService;
 import com.google.gson.Gson;
 import com.google.gson.stream.MalformedJsonException;
 import io.netty.channel.Channel;
@@ -26,6 +28,9 @@ public class TextWebSocketHandler extends SimpleChannelInboundHandler<TextWebSoc
     // Json parser
     private final Gson JSON = new Gson();
     private final GeneralHandler textHandler = new GeneralHandlerImp();
+
+    private final ChatHistoryController controller = new ChatHistoryController();
+
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame msg) throws Exception {

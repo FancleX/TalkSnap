@@ -95,7 +95,7 @@ public class ChatHistoryService {
             int counts = 0;
             List<Object> objects = new ArrayList<>();
             // if the value is not null then count
-            if (!value.isEmpty()){
+            if (!value.isEmpty()) {
                 counts = value.stream().mapToInt(o -> o.isRead() ? 0 : 1).reduce(Integer::sum).getAsInt();
             }
             objects.add(value);
@@ -105,6 +105,19 @@ public class ChatHistoryService {
         return res;
     }
 
+    public void markRead(MQObject object) {
+       List<MQObject> content = (List<MQObject>) object.getContent();
+        Long fromId = object.getFromId();
+        // query those read message and change status in db
+        ChatEntity entity = chatHistoryRepository.findById(fromId).get();
+        HashMap<Long, PriorityQueue<MQObject>> history = entity.getHistory();
+        PriorityQueue<MQObject> objects = history.get(object.getTo());
+        content.forEach(c -> {
+            objects.stream().filter(c::equals).forEachOrdered(o -> o.setRead(true));
+        });
+        // save
+        chatHistoryRepository.save(entity);
+    }
 
 
 
