@@ -10,6 +10,7 @@ import javax.transaction.Transactional;
 import java.util.*;
 
 @Service
+@Transactional
 public class ChatHistoryService {
 
     private final ChatHistoryRepository chatHistoryRepository;
@@ -25,7 +26,6 @@ public class ChatHistoryService {
      * @param userId
      * @param username
      */
-    @Transactional
     public void createEntity(Long userId, String username) {
         // determine if the user already get the chat entity from addHistory
         Optional<ChatEntity> id = chatHistoryRepository.findById(userId);
@@ -46,7 +46,6 @@ public class ChatHistoryService {
      *
      * @param object
      */
-    @Transactional
     public void addHistory(MQObject object) {
         // add the message to both sender and receiver
         Long from = object.getFromId();
@@ -81,7 +80,7 @@ public class ChatHistoryService {
      * and count unread messages
      *
      * @param userId the user id
-     * @return all history will be like {queryId: [chatEntities of the id, the number of unread of the chat entities]}
+     * @return all history will be like {contactId: [chatEntities of the id, the number of unread of the chat entities]}
      */
     public HashMap<Long, List<Object>> getHistoryById(Long userId) {
         Optional<ChatEntity> chatEntity = chatHistoryRepository.findById(userId);
@@ -117,6 +116,21 @@ public class ChatHistoryService {
         });
         // save
         chatHistoryRepository.save(entity);
+    }
+
+    /**
+     * determine if the user has account record in database
+     *
+     * @param userId
+     * @return
+     */
+    public boolean isRegistered(Long userId) {
+        Optional<ChatEntity> id = chatHistoryRepository.findById(userId);
+        if (id.isPresent()) {
+            ChatEntity entity = id.get();
+            return entity.getUsername() != null;
+        }
+        return false;
     }
 
 

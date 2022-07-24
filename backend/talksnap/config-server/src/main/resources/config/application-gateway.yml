@@ -10,10 +10,10 @@ spring:
           uri: lb://USER-SERVICE
           predicates:
             - Path=/user/**
-#        - id: chat-service
-#          uri: lb:ws://CHAT-SERVICE
-#          predicates:
-#            - Path=/user/**
+        - id: chat-service
+          uri: lb:ws://CHAT-SERVICE
+          predicates:
+            - Path=/chat
       globalcors:
         cors-configurations:
           '[/**]':

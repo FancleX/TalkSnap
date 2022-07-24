@@ -3,3 +3,8 @@ server:
 spring:
   application:
     name: chat-service
+  data:
+    mongodb:
+      uri: mongodb+srv://fancle:qwer123456@cluster0.oiv38.mongodb.net/talksnap?retryWrites=true&w=majority
+
+

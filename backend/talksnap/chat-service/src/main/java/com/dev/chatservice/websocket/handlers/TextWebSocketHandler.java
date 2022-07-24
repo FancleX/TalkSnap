@@ -9,7 +9,6 @@ import com.dev.chatservice.websocket.channel.WebSocketChannelPool;
 import com.dev.chatservice.websocket.controller.ChatHistoryController;
 import com.dev.chatservice.websocket.handlers.subHandlers.GeneralHandler;
 import com.dev.chatservice.websocket.handlers.subHandlers.GeneralHandlerImp;
-import com.dev.chatservice.websocket.service.ChatHistoryService;
 import com.google.gson.Gson;
 import com.google.gson.stream.MalformedJsonException;
 import io.netty.channel.Channel;
@@ -19,7 +18,8 @@ import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import lombok.extern.slf4j.Slf4j;
 
 
-import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -42,6 +42,7 @@ public class TextWebSocketHandler extends SimpleChannelInboundHandler<TextWebSoc
         Map<String, Object> auth = Auth.verify(message.getToken());
         // get sender info
         if (auth == null) {
+            ctx.channel().writeAndFlush(new MQObject(MessageType.ERROR));
             // break the connection
             ctx.channel().close();
             return;
@@ -58,15 +59,21 @@ public class TextWebSocketHandler extends SimpleChannelInboundHandler<TextWebSoc
                 WebSocketChannel channel = new WebSocketChannel(message.getUuid(), ctx.channel());
                 WebSocketChannelPool.bind(userId, channel);
                 // db registry
+                if (!controller.isRegistered(userId)) {
+                    controller.registry(userId, username);
+                }
 
 
 
             }
-            case TEXT ->
+            case TEXT -> {
+                // record in db
+                controller.appendHistory(object);
                 // call text handler
                 textHandler.handle(object);
+            }
             case HEART_BEAT -> {
-                MQObject res = new MQObject(message.getUuid(), -1L,"Server", object.getFromId(), "Pong", new Date(System.currentTimeMillis()), MessageType.HEART_BEAT, false);
+                MQObject res = new MQObject(MessageType.HEART_BEAT);
                 ctx.channel().writeAndFlush(res);
                 // check if the channel exist or not
                 if (!WebSocketChannelPool.isContain(userId, message.getUuid())) {
@@ -74,19 +81,21 @@ public class TextWebSocketHandler extends SimpleChannelInboundHandler<TextWebSoc
                     WebSocketChannelPool.bind(userId, new WebSocketChannel(message.getUuid(), ctx.channel()));
                 }
             }
-            case MEDIA ->
+            case MEDIA -> {
+                // record in db
+                controller.appendHistory(object);
                 // turn to binary handler
                 ctx.fireChannelRead(msg);
+            }
             // fetch history
             case FETCH -> {
                 // get history
-
-
-
+                HashMap<Long, List<Object>> history = controller.fetchHistory(userId);
+                ctx.channel().writeAndFlush(history);
             }
             // trigger when the user read the message, change the state
             case ACK_READ -> {
-
+                controller.markRead(object);
             }
             default ->
                 // malformed request

@@ -5,9 +5,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
-@SpringBootApplication(scanBasePackages = "com.dev.chatservice.websocket")
+@EnableMongoRepositories(basePackages = "com.dev.chatservice.websocket.repository")
+@EntityScan(basePackages = "com.dev.chat")
+@EnableEurekaClient
+@SpringBootApplication(scanBasePackages = "com.dev.chatservice.websocket", exclude = DataSourceAutoConfiguration.class)
 public class ChatServiceApplication implements CommandLineRunner {
 
     @Value("${server.port}")

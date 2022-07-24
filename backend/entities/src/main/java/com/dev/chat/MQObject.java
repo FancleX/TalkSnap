@@ -1,10 +1,10 @@
 package com.dev.chat;
 
 import com.sun.istack.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Id;
 import javax.persistence.Transient;
@@ -14,7 +14,7 @@ import java.util.Date;
 import java.util.Objects;
 
 @Data
-@Document
+@Document("chat_message")
 public class MQObject implements Serializable {
 
     @Serial
@@ -38,6 +38,7 @@ public class MQObject implements Serializable {
 
     private Object content;
 
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private Date time;
 
     @NotNull
@@ -54,6 +55,10 @@ public class MQObject implements Serializable {
         this.time = time;
         this.type = type;
         this.isRead = isRead;
+    }
+
+    public MQObject(MessageType type) {
+        this.type = type;
     }
 
     @Override
