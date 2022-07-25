@@ -16,7 +16,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @SpringBootApplication(scanBasePackages = "com.dev.chatservice.websocket", exclude = DataSourceAutoConfiguration.class)
 public class ChatServiceApplication implements CommandLineRunner {
 
-    @Value("${server.port}")
+    @Value("${netty.port}")
     private int port;
 
     public static void main(String[] args) {

@@ -62,9 +62,6 @@ public class TextWebSocketHandler extends SimpleChannelInboundHandler<TextWebSoc
                 if (!controller.isRegistered(userId)) {
                     controller.registry(userId, username);
                 }
-
-
-
             }
             case TEXT -> {
                 // record in db
