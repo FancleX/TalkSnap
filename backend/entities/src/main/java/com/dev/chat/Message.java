@@ -1,5 +1,6 @@
 package com.dev.chat;
 
+import com.mongodb.lang.Nullable;
 import lombok.Data;
 import lombok.ToString;
 
@@ -29,6 +30,7 @@ public class Message implements Serializable {
     // total length
     private int length;
     // file extension
+    @Nullable
     private String fileExtension;
 
 }
