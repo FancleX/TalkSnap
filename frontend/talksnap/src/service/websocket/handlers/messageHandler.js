@@ -1,6 +1,6 @@
 import ws from '../websocket'
 
-ws.onmessage() = {
+ws.onmessage = () => {
     // parse message
     // check type
     // text or heartbeat

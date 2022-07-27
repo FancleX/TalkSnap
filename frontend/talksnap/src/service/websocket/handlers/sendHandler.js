@@ -27,7 +27,9 @@ const objectConstructor = (to, type, content, extension) => {
     }
 }
 
-
+const mediaUpload = () => {
+    // return a remote storage url
+}
 
 const send = (to, type, content, extension) => {
     // marshall different type object
@@ -36,4 +38,4 @@ const send = (to, type, content, extension) => {
     ws.send(JSON.stringify(obj));
 }
 
-export { send, visitorId }
+export { send, mediaUpload }

@@ -3,4 +3,4 @@ const TypeEnum = Object.freeze({
   });
 
 
-export default { TypeEnum }
+export { TypeEnum }
