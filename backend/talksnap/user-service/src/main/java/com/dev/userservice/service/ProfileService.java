@@ -34,6 +34,7 @@ public class ProfileService {
             // query the user
             User user = userRepository.findById(id).get();
             Map<String, Object> userProfile = new HashMap<>();
+            userProfile.put("id", user.getId());
             userProfile.put("nickname", user.getNickname());
             userProfile.put("email", user.getEmail());
             userProfile.put("profile_img", user.getProfileImg());

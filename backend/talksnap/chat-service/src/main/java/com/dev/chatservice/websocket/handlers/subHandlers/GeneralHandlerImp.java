@@ -20,9 +20,7 @@ public class GeneralHandlerImp implements GeneralHandler {
         // deliver the object
         Set<WebSocketChannel> channels = WebSocketChannelPool.getChannels(to);
         // send to all available channels
-        channels.forEach(c -> {
-            c.getChannel().writeAndFlush(object);
-        });
+        channels.forEach(c -> c.getChannel().writeAndFlush(object));
         return true;
     }
 

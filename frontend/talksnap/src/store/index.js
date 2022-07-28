@@ -1,10 +1,47 @@
 import { createStore } from 'vuex'
 
+
+const history = {
+  state: {
+    // entity: {
+    //   id: Number,
+    //   context: [],
+    //   unreads: Number
+    // },
+    chatHistory: []
+  },
+  getters: {
+    getAllHistory(state) {
+      return state.chatHistory;
+    }
+  },
+  mutations: {
+    // constructEntity(state, id, context, unreads) {
+    //   const entity = {
+    //     id: id,
+    //     context: context,
+    //     unreads: unreads
+    //   }
+    //   return entity;
+    // }
+    appendHistory(state, entity) {
+      state.history.push(entity);
+      state.history.forEach(element => {
+        // check if the user is a sender or receiver
+        // query the id, and push the history to the associated list
+        // update unreads
+      });
+    }
+  }
+}
+
+
 export default createStore({
   state: {
     token: "",
     userProfile: {},
-    isLogin: false
+    isLogin: false,
+    chatHistory: []
   },
   getters: {
     getAuth(state) {
@@ -19,6 +56,12 @@ export default createStore({
     },
     isLogin(state) {
       return state.isLogin;
+    },
+    getId(state) {
+      return state.userProfile.id;
+    },
+    getAllHistory(state) {
+      return state.chatHistory;
     }
   },
   mutations: {
@@ -43,6 +86,9 @@ export default createStore({
     logout(state) {
       state.isLogin = false;
       sessionStorage.removeItem('isLogin');
+    },
+    appendHistory(state, entity) {
+      state.history.push(entity);
     }
   },
   actions: {
@@ -63,5 +109,6 @@ export default createStore({
     },
   },
   modules: {
+    h: history
   }
 })

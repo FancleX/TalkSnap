@@ -88,12 +88,12 @@ public class TextWebSocketHandler extends SimpleChannelInboundHandler<TextWebSoc
             case FETCH -> {
                 // get history
                 HashMap<Long, List<Object>> history = controller.fetchHistory(userId);
-                ctx.channel().writeAndFlush(history);
+                MQObject res = new MQObject(history, MessageType.FETCH);
+                ctx.channel().writeAndFlush(res);
             }
             // trigger when the user read the message, change the state
-            case ACK_READ -> {
+            case ACK_READ ->
                 controller.markRead(object);
-            }
             default ->
                 // malformed request
                 // throw exception

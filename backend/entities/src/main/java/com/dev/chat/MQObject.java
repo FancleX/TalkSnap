@@ -61,6 +61,11 @@ public class MQObject implements Serializable {
         this.type = type;
     }
 
+    public MQObject(Object content, MessageType type) {
+        this.content = content;
+        this.type = type;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

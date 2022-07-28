@@ -1,5 +1,5 @@
 import ws from '../websocket'
-import store from '@/store';
+import store from '@/store'
 
 // Initialize the agent at application startup.
 const fpPromise = import('https://openfpcdn.io/fingerprintjs/v3')
