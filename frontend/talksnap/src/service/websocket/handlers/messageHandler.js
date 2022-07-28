@@ -6,6 +6,7 @@ ws.onmessage = (message) => {
     // parse message
     const data = JSON.parse(message);
     const { fromId, fromName, to, content, time, type, isRead } = data;
+    // construct single message entity or assign all history
     // check type
     // text or heartbeat or fetch
     switch (type) {
@@ -17,7 +18,7 @@ ws.onmessage = (message) => {
             setTimeout(send(null, TypeEnum.HEART_BEAT, null, null), 5000);
             break;
         case "FETCH":
-            // only content and type
+            // only content {contactId: [[history], unreads]} and type
             break;        
     }
 
@@ -25,6 +26,7 @@ ws.onmessage = (message) => {
     // save to vuex if text
 
 }
+
 
 
 // @NotNull

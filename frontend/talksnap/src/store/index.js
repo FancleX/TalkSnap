@@ -24,6 +24,9 @@ const history = {
     //   }
     //   return entity;
     // }
+    setChatHistory(state, history) {
+      state.chatHistory = history;
+    },
     appendHistory(state, entity) {
       state.history.push(entity);
       state.history.forEach(element => {
