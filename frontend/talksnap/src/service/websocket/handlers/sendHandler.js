@@ -1,4 +1,4 @@
-import ws from '../websocket'
+import { ws } from '../websocket'
 import store from '@/store'
 
 // Initialize the agent at application startup.

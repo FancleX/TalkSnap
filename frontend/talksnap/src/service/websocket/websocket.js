@@ -1,9 +1,13 @@
 
 const url = "ws://localhost:9005/chat";
 
-const ws = new WebSocket(url);
+const init = () => {
+    return new WebSocket(url);
+}
 
-export default ws;
+const ws = init();
+
+export { ws, init };
 
 
 

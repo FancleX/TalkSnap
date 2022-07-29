@@ -44,7 +44,7 @@ export default createStore({
     token: "",
     userProfile: {},
     isLogin: false,
-    chatHistory: []
+    chatHistory: new Map()
   },
   getters: {
     getAuth(state) {
@@ -62,6 +62,9 @@ export default createStore({
     },
     getId(state) {
       return state.userProfile.id;
+    },
+    getHistoryById(state, id) {
+      return state.chatHistory.get(id);
     },
     getAllHistory(state) {
       return state.chatHistory;
@@ -90,8 +93,23 @@ export default createStore({
       state.isLogin = false;
       sessionStorage.removeItem('isLogin');
     },
-    appendHistory(state, entity) {
-      state.history.push(entity);
+    setChatHistory(state, history) {
+      if (history.length !== 0) {
+        let keys = Object.keys(history);
+        let values = Object.values(history);
+        for (let i = 0; i < keys.length; i++) {
+          state.chatHistory.set(keys[i], values[i]);
+        }
+      } 
+    },
+    markRead(state, id, entity) {
+      state.chatHistory.get(id).forEach(e => {
+        e[0].forEach(h => {
+          if (h === entity) {
+            e[1]--;
+          }
+        });
+      });
     }
   },
   actions: {
@@ -110,8 +128,21 @@ export default createStore({
       profile.bg_img = img;
       context.commit('setMyProfile', profile);
     },
+    appendHistory(context, entity) {
+      let id = context.getters.getId;
+      // check if the user is a sender or receiver
+      let target = id === entity.fromId ? entity.to : entity.fromId;
+      let history = context.getters.getHistoryById(target);
+      if (history != null) {
+        // add the entity
+        history[0].push(entity);
+        // increase unreads
+        history[1]++;
+        context.getters.getHistoryById(target) = history;
+      } else {
+        // create an entity to map
+        context.getters.getAllHistory.set(target, [[entity], 1]);
+      }
+    }
   },
-  modules: {
-    h: history
-  }
 })

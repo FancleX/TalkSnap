@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -111,9 +112,7 @@ public class ChatHistoryService {
         ChatEntity entity = chatHistoryRepository.findById(fromId).get();
         HashMap<Long, PriorityQueue<MQObject>> history = entity.getHistory();
         PriorityQueue<MQObject> objects = history.get(object.getTo());
-        content.forEach(c -> {
-            objects.stream().filter(c::equals).forEachOrdered(o -> o.setRead(true));
-        });
+        content.forEach(c -> objects.stream().filter(c::equals).forEachOrdered(o -> o.setRead(true)));
         // save
         chatHistoryRepository.save(entity);
     }

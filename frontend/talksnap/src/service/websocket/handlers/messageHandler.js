@@ -1,17 +1,17 @@
-import ws from '../websocket'
+import { ws } from '../websocket'
 import store from '@/store'
 import { send } from '../handlers/sendHandler' 
 
 ws.onmessage = (message) => {
     // parse message
     const data = JSON.parse(message);
-    const { fromId, fromName, to, content, time, type, isRead } = data;
+    const { type } = data;
     // construct single message entity or assign all history
     // check type
     // text or heartbeat or fetch
     switch (type) {
         case "TEXT":
-            
+            store.dispatch('appendHistory', data);
             break;
         case "HEART_BEAT":
             // only type
@@ -19,6 +19,8 @@ ws.onmessage = (message) => {
             break;
         case "FETCH":
             // only content {contactId: [[history], unreads]} and type
+            console.log(data.content);
+            store.commit("setChatHistory", data.content);
             break;        
     }
 

@@ -1,4 +1,4 @@
-import ws from '../websocket'
+import { ws } from '../websocket'
 import { send } from '../handlers/sendHandler' 
 import { TypeEnum } from '../handlers/type'
 import Notification from '@/utils/notification'
